@@ -358,12 +358,12 @@ export function ScrollTimeline() {
 		<div className="relative mx-auto max-w-3xl px-4 py-12 font-mono">
 			<div className="mb-12 text-neutral-500 text-sm">
 				<span className="text-neutral-400">$</span> history | grep "career"
-				--sort=date
+				--sort=date --reverse
 			</div>
 
 			<div className="relative">
 				<div className="space-y-12">
-					{MILESTONES.map((item) => (
+					{MILESTONES.toReversed().map((item) => (
 						<TimelineItem
 							item={item}
 							key={`${item.year}-${item.company}-${item.title}`}
