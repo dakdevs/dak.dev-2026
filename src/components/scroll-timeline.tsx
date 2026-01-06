@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import { motion, useInView, useReducedMotion } from 'motion/react'
 
+import { CliTypewriter } from '~/components/cli-typewriter'
 import {
 	BriefcaseIcon,
 	GamepadIcon,
@@ -381,6 +382,10 @@ function TimelineItem({ item }: { item: (typeof MILESTONES)[0] }) {
 	const shouldReduceMotion = useReducedMotion()
 	const isSubtle = 'subtle' in item && item.subtle
 	const Icon = 'type' in item ? MILESTONE_ICONS[item.type] : TerminalIcon
+	const [commandComplete, setCommandComplete] = useState(false)
+	const [titleComplete, setTitleComplete] = useState(false)
+
+	const hasCommand = !isSubtle && item.command
 
 	return (
 		<div
@@ -403,40 +408,51 @@ function TimelineItem({ item }: { item: (typeof MILESTONES)[0] }) {
 			</div>
 
 			<div className="relative border-neutral-200 border-l-2 pl-4">
-				<motion.div
-					animate={
-						isInView
-							? { opacity: 1, x: 0 }
-							: { opacity: 0, x: shouldReduceMotion ? 0 : -10 }
-					}
-					initial={{ opacity: 0, x: shouldReduceMotion ? 0 : -10 }}
-					transition={{ duration: 0.5, delay: 0.2 }}
-				>
-					{!isSubtle && item.command && (
-						<motion.div
-							animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-							className="mb-4 font-mono text-xs"
-							initial={{ opacity: 0 }}
-							transition={{ duration: 0.5, delay: 0.7 }}
-						>
-							<div className="flex items-center gap-2 text-neutral-500">
-								<span className="font-bold text-neutral-500">$</span>
-								<span className="opacity-75">{item.command}</span>
-							</div>
-							{'ongoing' in item && item.ongoing ? <BuildingIndicator /> : null}
-						</motion.div>
-					)}
+				{hasCommand ? (
+					<div className="mb-4 font-mono text-xs">
+						<div className="flex items-center gap-2 text-neutral-500">
+							<span className="font-bold text-neutral-500">$</span>
+							<span className="opacity-75">
+								{isInView ? (
+									<CliTypewriter
+										hideCursorOnComplete
+										onComplete={() => setCommandComplete(true)}
+										showCursor={false}
+										startDelay={200}
+										text={item.command}
+										typingSpeed={shouldReduceMotion ? 0 : 40}
+									/>
+								) : null}
+							</span>
+						</div>
+						{'ongoing' in item && item.ongoing && commandComplete ? (
+							<BuildingIndicator />
+						) : null}
+					</div>
+				) : null}
 
-					<h3
-						className={cn(
-							'mb-2 font-bold tracking-tight',
-							isSubtle
-								? 'text-neutral-500 text-sm'
-								: 'text-neutral-900 text-xl',
-						)}
-					>
-						{item.title}
-					</h3>
+				<h3
+					className={cn(
+						'mb-2 font-bold tracking-tight',
+						isSubtle ? 'text-neutral-500 text-sm' : 'text-neutral-900 text-xl',
+					)}
+				>
+					{isInView && (hasCommand ? commandComplete : true) ? (
+						<CliTypewriter
+							hideCursorOnComplete
+							onComplete={() => setTitleComplete(true)}
+							startDelay={hasCommand ? 100 : 200}
+							text={item.title}
+							typingSpeed={shouldReduceMotion ? 0 : 30}
+						/>
+					) : null}
+				</h3>
+
+				<motion.div
+					animate={titleComplete ? { opacity: 1 } : { opacity: 0 }}
+					initial={{ opacity: 0 }}
+					transition={{ duration: 0.4 }}
+				>
 					<div
 						className={cn(
 							'font-medium text-neutral-500',
