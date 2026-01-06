@@ -370,11 +370,6 @@ export function ScrollTimeline() {
 						/>
 					))}
 				</div>
-
-				<div className="relative mt-12 pl-[18px]">
-					<span className="font-bold text-neutral-900">{'>'}</span>{' '}
-					<span className="inline-block h-5 w-2.5 animate-cursor-blink bg-neutral-900 align-middle" />
-				</div>
 			</div>
 		</div>
 	)
