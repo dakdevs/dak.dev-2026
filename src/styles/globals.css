@@ -16,3 +16,18 @@ body {
   background: var(--color-background);
   color: var(--color-foreground);
 }
+
+@keyframes cursor-blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.animate-cursor-blink {
+  animation: cursor-blink 530ms step-end infinite;
+}
