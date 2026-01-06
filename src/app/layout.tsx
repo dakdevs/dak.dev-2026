@@ -4,6 +4,8 @@ import '~/styles/globals.css'
 import type { Metadata, Viewport } from 'next'
 import type { ReactNode } from 'react'
 
+import { Analytics } from '@vercel/analytics/next'
+
 import { mono } from '~/fonts'
 import { cn } from '~/utils/cn'
 
@@ -30,7 +32,10 @@ export default function RootLayout({
 			className={cn(mono.variable, 'flex h-full flex-col antialiased')}
 			lang="en-US"
 		>
-			<body>{children}</body>
+			<body>
+				{children}
+				<Analytics />
+			</body>
 		</html>
 	)
 }
