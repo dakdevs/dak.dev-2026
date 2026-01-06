@@ -1,0 +1,78 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "extends": ["ultracite/core", "ultracite/next", "ultracite/react"],
+  "files": {
+    "includes": [
+      "**/*.tsx",
+      "**/*.ts",
+      "!node_modules",
+      "!.next",
+      "!dist",
+      "!build",
+      "!*.sql"
+    ]
+  },
+  "javascript": {
+    "formatter": {
+      "semicolons": "asNeeded",
+      "quoteStyle": "single",
+      "jsxQuoteStyle": "double",
+      "indentStyle": "tab",
+      "attributePosition": "multiline",
+      "arrowParentheses": "always",
+      "trailingCommas": "all"
+    }
+  },
+  "linter": {
+    "rules": {
+      "complexity": {
+        "noExcessiveCognitiveComplexity": "off",
+        "noVoid": "off"
+      },
+      "correctness": {
+        "noUnusedImports": {
+          "level": "error",
+          "fix": "none"
+        }
+      }
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "groups": [
+              {
+                "source": ":PACKAGE:",
+                "type": true
+              },
+              {
+                "source": "~/**",
+                "type": true
+              },
+              {
+                "source": ":PATH:",
+                "type": true
+              },
+              ":BLANK_LINE:",
+              "react",
+              "react-dom",
+              ":BLANK_LINE:",
+              ":PACKAGE:",
+              ":BLANK_LINE:",
+              ":NODE:",
+              ":BLANK_LINE:",
+              "~/**/_modules/**",
+              "~/**",
+              ":BLANK_LINE:",
+              ":PATH:"
+            ],
+            "identifierOrder": "lexicographic"
+          }
+        }
+      }
+    }
+  }
+}
