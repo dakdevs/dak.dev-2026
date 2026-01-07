@@ -5,6 +5,8 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import Image from 'next/image'
 
 import { TextScramble } from '~/components/motion-primitives/text-scramble'
+import { ScreenshotTooltip } from '~/components/screenshot-tooltip'
+import { SCREENSHOT_MAP } from '~/data/screenshot-manifest'
 
 const URL_PROTOCOL_REGEX = /^https?:\/\//
 const URL_TRAILING_SLASH_REGEX = /\/$/
@@ -669,6 +671,8 @@ function fuzzyMatch(text: string, query: string): boolean {
 export function RecommendationsList() {
 	const [search, setSearch] = useState('')
 	const [showCurrentOnly, setShowCurrentOnly] = useState(false)
+	const [hoveredUrl, setHoveredUrl] = useState<string | null>(null)
+	const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
 	const searchInputRef = useRef<HTMLInputElement>(null)
 
 	useEffect(() => {
@@ -821,6 +825,11 @@ export function RecommendationsList() {
 											className="relative flex flex-col justify-between overflow-hidden bg-white p-6 transition-colors duration-200 hover:bg-neutral-50"
 											href={item.url}
 											key={item.name}
+											onMouseEnter={() => setHoveredUrl(item.url)}
+											onMouseLeave={() => setHoveredUrl(null)}
+											onMouseMove={(e) =>
+												setMousePos({ x: e.clientX, y: e.clientY })
+											}
 											rel="noopener noreferrer"
 											target="_blank"
 										>
@@ -877,6 +886,12 @@ export function RecommendationsList() {
 					))
 				)}
 			</div>
+			{hoveredUrl !== null && (
+				<ScreenshotTooltip
+					position={mousePos}
+					src={SCREENSHOT_MAP[hoveredUrl]}
+				/>
+			)}
 		</div>
 	)
 }
