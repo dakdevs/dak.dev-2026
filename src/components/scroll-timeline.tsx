@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 
-import { motion, useInView, useReducedMotion } from 'motion/react'
+import { motion, useInView, useScroll, useSpring } from 'motion/react'
 
 import { CliTypewriter } from '~/components/cli-typewriter'
 import {
@@ -355,19 +355,41 @@ const MILESTONES = [
 ]
 
 export function ScrollTimeline() {
+	const ref = useRef<HTMLDivElement>(null)
+	const { scrollYProgress } = useScroll({
+		target: ref,
+		offset: ['start end', 'end start'],
+	})
+
+	const scaleY = useSpring(scrollYProgress, {
+		stiffness: 100,
+		damping: 30,
+		restDelta: 0.001,
+	})
+
 	return (
-		<div className="relative mx-auto max-w-3xl px-4 pt-12 pb-24 font-mono">
-			<div className="mb-12 text-neutral-500 text-sm">
-				<span className="text-neutral-400">$</span> history | grep "career"
-				--sort=date --reverse
+		<div
+			className="relative mx-auto max-w-4xl px-4 font-mono"
+			ref={ref}
+		>
+			<div className="mb-16 flex items-center gap-4 text-neutral-400 text-xs uppercase tracking-wider">
+				<span className="h-px flex-1 bg-neutral-200" />
+				<span>$ history | grep "career" --sort=date --reverse</span>
+				<span className="h-px flex-1 bg-neutral-200" />
 			</div>
 
 			<div className="relative">
-				<div className="absolute top-3 bottom-3 left-[27px] w-px bg-neutral-200 md:left-[27px]" />
+				<div className="absolute top-0 bottom-0 left-[28px] w-px bg-neutral-100 md:left-[28px]" />
 
-				<div className="space-y-0">
-					{MILESTONES.toReversed().map((item) => (
+				<motion.div
+					className="absolute top-0 bottom-0 left-[28px] w-px origin-top bg-neutral-900/10 md:left-[28px]"
+					style={{ scaleY }}
+				/>
+
+				<div className="space-y-12 pb-32">
+					{MILESTONES.toReversed().map((item, index) => (
 						<TimelineItem
+							index={index}
 							item={item}
 							key={`${item.year}-${item.company}-${item.title}`}
 						/>
@@ -378,145 +400,127 @@ export function ScrollTimeline() {
 	)
 }
 
-function TimelineItem({ item }: { item: (typeof MILESTONES)[0] }) {
+function TimelineItem({
+	item,
+	index,
+}: {
+	item: (typeof MILESTONES)[0]
+	index: number
+}) {
 	const ref = useRef<HTMLDivElement>(null)
-	const isInView = useInView(ref, { once: true, margin: '-10% 0px -5% 0px' })
-	const shouldReduceMotion = useReducedMotion()
+	const isInView = useInView(ref, {
+		once: true,
+		margin: '-10% 0px -10% 0px',
+		amount: 0.2,
+	})
 	const isSubtle = 'subtle' in item && item.subtle
 	const Icon = 'type' in item ? MILESTONE_ICONS[item.type] : TerminalIcon
 	const [commandComplete, setCommandComplete] = useState(false)
-	const [titleComplete, setTitleComplete] = useState(false)
 
 	const hasCommand = !isSubtle && item.command
 
 	return (
-		<div
+		<motion.div
+			animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
 			className={cn(
-				'group relative flex gap-6 md:gap-8',
-				isSubtle ? 'pb-8' : 'pb-16',
-				'last:pb-0',
+				'group relative flex gap-6 md:gap-10',
+				isSubtle &&
+					'opacity-70 grayscale transition-all hover:opacity-100 hover:grayscale-0',
 			)}
+			initial={{ opacity: 0, y: 20 }}
 			ref={ref}
+			transition={{ duration: 0.5, delay: index * 0.05 }}
 		>
-			<div className="flex w-[54px] flex-none flex-col items-center">
+			<div className="flex flex-none flex-col items-center">
 				<div
 					className={cn(
-						'absolute top-[18px] left-[28px] h-px bg-neutral-200 transition-all duration-500',
-						isInView ? 'w-6 opacity-100' : 'w-0 opacity-0',
-					)}
-				/>
-
-				<div
-					className={cn(
-						'relative z-10 mt-[9px] flex items-center justify-center rounded-full border bg-white ring-8 ring-white transition-all duration-500',
+						'relative z-10 flex h-14 w-14 items-center justify-center rounded-2xl border-2 shadow-sm transition-all duration-500',
 						isSubtle
-							? 'h-3 w-3 border-neutral-300 bg-neutral-100'
-							: 'h-5 w-5 border-neutral-900 bg-white',
+							? 'h-8 w-8 rounded-full border-neutral-200 bg-neutral-50'
+							: 'border-neutral-100 bg-white',
 						isInView ? 'scale-100 opacity-100' : 'scale-0 opacity-0',
 					)}
 				>
-					{!isSubtle && (
-						<div className="h-1.5 w-1.5 rounded-full bg-neutral-900" />
-					)}
+					<Icon
+						className={cn(
+							'transition-all duration-500',
+							isSubtle
+								? 'size-3.5 text-neutral-400'
+								: 'size-6 text-neutral-700',
+							'group-hover:scale-110 group-hover:text-black',
+						)}
+					/>
 				</div>
 			</div>
 
-			<div className="min-w-0 flex-1 pt-1">
-				<div className="mb-4 flex items-center gap-3">
-					<div
+			<div className={cn('min-w-0 flex-1 pt-2', isSubtle && 'pt-0')}>
+				<div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+					<span
 						className={cn(
-							'inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-neutral-50/50 px-3 py-1 font-medium text-neutral-600 backdrop-blur-sm transition-all duration-500',
-							isSubtle ? 'text-xs' : 'text-xs',
-							isInView
-								? 'translate-x-0 opacity-100'
-								: '-translate-x-4 opacity-0',
+							'font-bold font-mono',
+							isSubtle
+								? 'text-neutral-400 text-xs'
+								: 'text-neutral-400 text-sm',
 						)}
 					>
-						<Icon className="size-3.5" />
 						{item.year}
-					</div>
+					</span>
+					{!isSubtle && (
+						<span className="h-1 w-1 rounded-full bg-neutral-300" />
+					)}
+					<span
+						className={cn(
+							'font-medium text-neutral-900',
+							isSubtle ? 'text-xs' : 'text-sm',
+						)}
+					>
+						{item.company}
+					</span>
 				</div>
 
-				<div className="relative">
-					{hasCommand ? (
-						<div className="mb-4 font-mono text-xs">
-							<div className="flex items-center gap-2 text-neutral-500">
-								<span className="font-bold text-neutral-500">$</span>
-								<span className="opacity-75">
-									{isInView ? (
-										<CliTypewriter
-											hideCursorOnComplete
-											onComplete={() => setCommandComplete(true)}
-											showCursor={false}
-											startDelay={200}
-											text={item.command}
-											typingSpeed={shouldReduceMotion ? 0 : 40}
-										/>
-									) : null}
-								</span>
-							</div>
-							{'ongoing' in item && item.ongoing && commandComplete ? (
-								<BuildingIndicator />
-							) : null}
-						</div>
-					) : null}
+				<h3
+					className={cn(
+						'font-bold text-neutral-900 tracking-tight',
+						isSubtle ? 'text-sm' : 'text-xl md:text-2xl',
+					)}
+				>
+					{item.title}
+				</h3>
 
-					<h3
-						className={cn(
-							'mb-2 font-bold tracking-tight',
-							isSubtle
-								? 'text-neutral-500 text-sm'
-								: 'text-neutral-900 text-xl',
-						)}
-					>
-						{isInView && (hasCommand ? commandComplete : true) ? (
-							<CliTypewriter
-								hideCursorOnComplete
-								onComplete={() => setTitleComplete(true)}
-								startDelay={hasCommand ? 100 : 200}
-								text={item.title}
-								typingSpeed={shouldReduceMotion ? 0 : 30}
-							/>
+				{!!hasCommand && (
+					<div className="mt-3 mb-4 overflow-hidden rounded-md bg-neutral-50 px-3 py-2 font-mono text-xs">
+						<div className="flex items-center gap-2 text-neutral-500">
+							<span className="select-none font-bold text-neutral-400">$</span>
+							<span className="text-neutral-700">
+								{isInView ? (
+									<CliTypewriter
+										hideCursorOnComplete
+										onComplete={() => setCommandComplete(true)}
+										showCursor={false}
+										startDelay={500}
+										text={item.command}
+										typingSpeed={20}
+									/>
+								) : null}
+							</span>
+						</div>
+						{'ongoing' in item && item.ongoing && commandComplete ? (
+							<BuildingIndicator />
 						) : null}
-					</h3>
+					</div>
+				)}
 
-					<motion.div
-						animate={
-							titleComplete ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }
-						}
-						initial={{ opacity: 0, y: 10 }}
-						transition={{ duration: 0.4 }}
-					>
-						<div
-							className={cn(
-								'font-medium text-neutral-500',
-								isSubtle ? 'mb-2 text-neutral-400 text-xs' : 'mb-4 text-sm',
-							)}
-						>
-							@{' '}
-							{item.url ? (
-								<a
-									className="underline decoration-neutral-300 underline-offset-2 transition-colors hover:text-neutral-900 hover:decoration-neutral-900"
-									href={item.url}
-									rel="noopener noreferrer"
-									target="_blank"
-								>
-									{item.company}
-								</a>
-							) : (
-								item.company
-							)}
-						</div>
-						{!isSubtle && (
-							<p className="max-w-lg text-neutral-600 text-sm leading-relaxed md:text-base">
-								{item.description}
-							</p>
-						)}
-						{!isSubtle && item.technologies.length > 0 && (
-							<div className="mt-4 flex flex-wrap gap-2">
+				{!isSubtle && (
+					<>
+						<p className="mt-3 text-neutral-600 leading-relaxed">
+							{item.description}
+						</p>
+
+						{item.technologies.length > 0 && (
+							<div className="mt-6 flex flex-wrap gap-2">
 								{item.technologies.map((tech) => (
 									<span
-										className="rounded-md bg-neutral-100 px-2 py-1 text-neutral-500 text-xs transition-colors hover:bg-neutral-200"
+										className="inline-flex items-center rounded-full border border-neutral-200 bg-white px-2.5 py-0.5 font-medium text-neutral-600 text-xs transition-colors hover:border-neutral-300 hover:bg-neutral-50"
 										key={tech}
 									>
 										{tech}
@@ -524,10 +528,10 @@ function TimelineItem({ item }: { item: (typeof MILESTONES)[0] }) {
 								))}
 							</div>
 						)}
-					</motion.div>
-				</div>
+					</>
+				)}
 			</div>
-		</div>
+		</motion.div>
 	)
 }
 
@@ -541,5 +545,13 @@ function BuildingIndicator() {
 		return () => clearInterval(interval)
 	}, [])
 
-	return <div className="mt-1 text-green-600">building{'.'.repeat(dots)}</div>
+	return (
+		<div className="mt-1 flex items-center gap-1.5 font-medium text-emerald-600">
+			<span className="relative flex h-2 w-2">
+				<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+				<span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+			</span>
+			active{'.'.repeat(dots)}
+		</div>
+	)
 }

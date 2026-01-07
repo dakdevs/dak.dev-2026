@@ -2,7 +2,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { GithubIcon, LinkedInIcon, XIcon } from '~/components/icons'
-import { ScrollTimeline } from '~/components/scroll-timeline'
 
 const socials = [
 	{
@@ -34,12 +33,18 @@ export default function HomePage() {
 						src="/dak-logo.svg"
 						width={80}
 					/>
-					<nav>
+					<nav className="flex gap-6">
 						<Link
 							className="font-mono text-neutral-500 text-sm transition-colors hover:text-neutral-900"
 							href="/recommendations"
 						>
 							Recommendations
+						</Link>
+						<Link
+							className="font-mono text-neutral-500 text-sm transition-colors hover:text-neutral-900"
+							href="/career"
+						>
+							Career
 						</Link>
 					</nav>
 				</header>
@@ -82,7 +87,6 @@ export default function HomePage() {
 					</a>
 				</main>
 			</section>
-			<ScrollTimeline />
 		</div>
 	)
 }
