@@ -1,65 +1,97 @@
-# Project Guidelines
+# dak.dev-2026
+
+Personal portfolio site. Next.js 16 + React 19 + Tailwind v4 + Drizzle ORM + ORPC + TanStack Query.
+
+## Structure
+
+```
+src/
+  app/                    # Next.js App Router pages
+    career/               # Career timeline page
+    recommendations/      # Curated tools/products
+    rpc/[[...rest]]/      # ORPC catch-all handler
+  components/
+    motion-primitives/    # Animated text effects (use client)
+  config/                 # T3 Env validation
+  db/                     # Drizzle ORM + PostgreSQL
+  fonts/                  # Custom monospace font (all weights)
+  orpc/                   # Type-safe RPC layer
+    controllers/          # Route handlers
+    middleware/           # Request context
+  styles/                 # Tailwind v4 theme
+  utils/                  # cn() helper
+docs/
+  style-guide.md          # Brand colors, typography, spacing
+```
+
+## Where to Look
+
+| Task | Location |
+|------|----------|
+| Add page | `src/app/{route}/page.tsx` |
+| Add API endpoint | `src/orpc/controllers/` + register in `index.ts` |
+| Add component | `src/components/` (kebab-case filename) |
+| Add animation | `src/components/motion-primitives/` |
+| DB schema | `src/db/models/` |
+| Environment vars | `src/config/env.ts` (T3 Env validation) |
+| Theme/colors | `src/styles/globals.css` or `docs/style-guide.md` |
 
 ## Server Components First
 
-**Never mark these files as `'use client'`:**
-- `page.tsx`
-- `layout.tsx`
-- `default.tsx`
-- `loading.tsx`
-- `error.tsx`
-- `not-found.tsx`
+**Never add `'use client'` to:**
+- `page.tsx`, `layout.tsx`, `default.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`
 
-### Why?
-
-Server Components are the default in Next.js App Router. They enable:
-- Zero client-side JavaScript for static content
-- Direct database/API access without exposing endpoints
-- Smaller bundle sizes
-- Better SEO and initial page load
-
-### How to Handle Client Interactivity
-
-Push `'use client'` as far down the component tree as possible:
-
+**Push client code down the tree:**
 ```
-Bad:
-page.tsx ('use client') <- entire page is client-rendered
-
-Good:
 page.tsx (server)
-  └── ClientButton.tsx ('use client') <- only interactive parts
+  └── interactive-widget.tsx ('use client')
 ```
 
-### Example
+Extract minimum client code: `useState`, `useEffect`, event handlers, browser APIs, motion animations.
 
-```tsx
-// page.tsx - Server Component (no 'use client')
-import { InteractiveWidget } from '~/components/interactive-widget'
+## Conventions
 
-export default function Page() {
-  return (
-    <main>
-      <h1>Static content rendered on server</h1>
-      <p>This text has zero JS overhead</p>
-      <InteractiveWidget /> {/* Only this needs client JS */}
-    </main>
-  )
-}
+- **Filenames**: kebab-case always
+- **Params**: Inline types, not isolated `interface`
+- **Motion**: Use `motion` package (not `framer-motion`)
+- **Imports**: `~/` alias for `src/`
+- **Formatter**: Ultracite (Biome) — tabs, single quotes, trailing commas
+- **Unused imports**: Error (no auto-fix)
 
-// components/interactive-widget.tsx
-'use client'
+## ORPC Architecture
 
-export function InteractiveWidget() {
-  const [count, setCount] = useState(0)
-  return <button onClick={() => setCount(c => c + 1)}>{count}</button>
-}
+```
+client.ts          # Browser client with TanStack Query
+orpc.server.ts     # Server-side client (headers context)
+router.ts          # Combines all controllers
+controllers/
+  index.ts         # Controller registry
+  ping.ts          # Example: os.handler() pattern
 ```
 
-### When You Need Client Features
+Add controller: Create handler in `controllers/`, export from `index.ts`.
 
-Extract the minimum necessary into a separate client component:
-- `useState`, `useEffect`, `useContext`
-- Event handlers (`onClick`, `onChange`, etc.)
-- Browser APIs (`window`, `localStorage`, etc.)
-- Third-party client libraries
+## Database
+
+- **ORM**: Drizzle with PostgreSQL
+- **Casing**: snake_case in DB
+- **Schema**: `src/db/models/`
+- **Commands**: `bun run db:push`, `db:generate`, `db:migrate`
+
+## Commands
+
+```bash
+bun dev              # Dev server (Turbopack)
+bun run build        # Production build
+bun run lint         # Ultracite check
+bun run lint:fix     # Ultracite fix
+bun run typecheck    # tsc --noEmit
+```
+
+## Anti-Patterns
+
+- `'use client'` on page/layout files
+- `as any`, `@ts-ignore`, `@ts-expect-error`
+- `framer-motion` import (use `motion`)
+- Isolated `interface` for function params
+- Non-kebab-case filenames

@@ -55,7 +55,19 @@ const LOGO_MAP: Record<string, string> = {
 	Zod: 'https://svgl.app/library/zod.svg',
 }
 
-const CATEGORIES = [
+type RecommendationItem = {
+	name: string
+	description: string
+	url: string
+	current?: boolean
+}
+
+type Category = {
+	name: string
+	items: RecommendationItem[]
+}
+
+const CATEGORIES: Category[] = [
 	{
 		name: 'IDEs',
 		items: [
@@ -63,6 +75,7 @@ const CATEGORIES = [
 				name: 'Zed',
 				description: 'High-performance code editor',
 				url: 'https://zed.dev',
+				current: true,
 			},
 			{
 				name: 'Cursor',
@@ -98,11 +111,13 @@ const CATEGORIES = [
 				name: 'Claude',
 				description: 'AI assistant by Anthropic',
 				url: 'https://claude.ai',
+				current: true,
 			},
 			{
 				name: 'ChatGPT',
 				description: 'AI assistant by OpenAI',
 				url: 'https://chatgpt.com',
+				current: true,
 			},
 			{
 				name: 'Google AI',
@@ -123,11 +138,13 @@ const CATEGORIES = [
 				name: 'OpenCode',
 				description: 'Terminal-based AI coding assistant',
 				url: 'https://github.com/opencode-ai/opencode',
+				current: true,
 			},
 			{
 				name: 'Oh My OpenCode',
 				description: 'Configuration framework for OpenCode',
 				url: 'https://github.com/code-yeongyu/oh-my-opencode',
+				current: true,
 			},
 		],
 	},
@@ -138,6 +155,7 @@ const CATEGORIES = [
 				name: 'Ghostty',
 				description: 'Fast, native terminal emulator',
 				url: 'https://ghostty.org',
+				current: true,
 			},
 			{
 				name: 'OrbStack',
@@ -173,6 +191,7 @@ const CATEGORIES = [
 				name: 'Zen',
 				description: 'Privacy-focused Firefox fork',
 				url: 'https://zen-browser.app',
+				current: true,
 			},
 			{
 				name: 'Comet',
@@ -188,21 +207,25 @@ const CATEGORIES = [
 				name: 'React',
 				description: 'UI library for building interfaces',
 				url: 'https://react.dev',
+				current: true,
 			},
 			{
 				name: 'Next.js',
 				description: 'React framework for production',
 				url: 'https://nextjs.org',
+				current: true,
 			},
 			{
 				name: 'TypeScript',
 				description: 'JavaScript with types',
 				url: 'https://typescriptlang.org',
+				current: true,
 			},
 			{
 				name: 'Tailwind CSS',
 				description: 'Utility-first CSS framework',
 				url: 'https://tailwindcss.com',
+				current: true,
 			},
 			{
 				name: 'AWS',
@@ -273,6 +296,7 @@ const CATEGORIES = [
 				name: 'Drizzle ORM',
 				description: 'TypeScript ORM for SQL databases',
 				url: 'https://orm.drizzle.team',
+				current: true,
 			},
 			{
 				name: 'Effect',
@@ -298,6 +322,7 @@ const CATEGORIES = [
 				name: 'Vercel',
 				description: 'Deploy and scale web apps',
 				url: 'https://vercel.com',
+				current: true,
 			},
 			{
 				name: 'Cloudflare',
@@ -318,6 +343,7 @@ const CATEGORIES = [
 				name: 'Raycast',
 				description: 'Launcher and productivity tool for Mac',
 				url: 'https://raycast.com',
+				current: true,
 			},
 			{
 				name: 'Linear',
@@ -353,6 +379,7 @@ const CATEGORIES = [
 				name: '1Password',
 				description: 'Password manager',
 				url: 'https://1password.com',
+				current: true,
 			},
 		],
 	},
@@ -461,6 +488,66 @@ const CATEGORIES = [
 			},
 		],
 	},
+	{
+		name: 'On My Desk',
+		items: [
+			{
+				name: 'Dell UltraSharp U2725QE',
+				description: '27" 4K IPS monitor with USB-C hub',
+				url: 'https://amzn.to/4qIlLnM',
+			},
+			{
+				name: 'KEF LSX II LT',
+				description: 'Wireless HiFi speakers',
+				url: 'https://amzn.to/4pwT1NM',
+			},
+			{
+				name: 'Razer DeathAdder V2 X HyperSpeed',
+				description: 'Wireless ergonomic gaming mouse',
+				url: 'https://amzn.to/4smm1KK',
+			},
+			{
+				name: 'Apple Magic Keyboard',
+				description: 'Touch ID and numeric keypad',
+				url: 'https://amzn.to/4qCzFaY',
+			},
+			{
+				name: 'Corsair TBT200',
+				description: 'Thunderbolt 4 dock with 96W power delivery',
+				url: 'https://amzn.to/49cL6As',
+			},
+			{
+				name: 'Apple HomePod mini',
+				description: 'Compact smart speaker with Siri',
+				url: 'https://amzn.to/49t8E2S',
+			},
+			{
+				name: 'Google Nest Hub',
+				description: '7-inch smart display',
+				url: 'https://amzn.to/4b7FPvt',
+			},
+			{
+				name: 'Nothing Headphone (1)',
+				description: 'KEF-tuned wireless ANC headphones',
+				url: 'https://amzn.to/4jvFLHJ',
+			},
+			{
+				name: 'Nothing Ear (3)',
+				description: 'Wireless earbuds with 45dB hybrid ANC',
+				url: 'https://amzn.to/4pvk3VR',
+			},
+			{
+				name: 'Soundcore AeroClip',
+				description: 'Open-ear clip-on earbuds',
+				url: 'https://amzn.to/3Z1pOjb',
+			},
+			{
+				name: 'Logitech MX Master 4',
+				description: 'Ergonomic wireless mouse with haptic feedback',
+				url: 'https://amzn.to/4q9J0Hk',
+			},
+		],
+	},
 ]
 
 function fuzzyMatch(text: string, query: string): boolean {
@@ -482,6 +569,7 @@ function fuzzyMatch(text: string, query: string): boolean {
 
 export function RecommendationsList() {
 	const [search, setSearch] = useState('')
+	const [showCurrentOnly, setShowCurrentOnly] = useState(false)
 	const searchInputRef = useRef<HTMLInputElement>(null)
 
 	useEffect(() => {
@@ -489,21 +577,41 @@ export function RecommendationsList() {
 	}, [])
 
 	const filteredCategories = useMemo(() => {
-		if (!search.trim()) {
-			return CATEGORIES
+		let categories = CATEGORIES
+
+		if (showCurrentOnly) {
+			categories = categories
+				.map((category) => ({
+					...category,
+					items: category.items.filter((item) => item.current),
+				}))
+				.filter((category) => category.items.length > 0)
 		}
 
-		return CATEGORIES.map((category) => ({
-			...category,
-			items: category.items.filter(
-				(item) =>
-					fuzzyMatch(item.name, search) || fuzzyMatch(item.description, search),
-			),
-		})).filter((category) => category.items.length > 0)
-	}, [search])
+		if (!search.trim()) {
+			return categories
+		}
+
+		return categories
+			.map((category) => ({
+				...category,
+				items: category.items.filter(
+					(item) =>
+						fuzzyMatch(item.name, search) ||
+						fuzzyMatch(item.description, search),
+				),
+			}))
+			.filter((category) => category.items.length > 0)
+	}, [search, showCurrentOnly])
 
 	const totalItems = CATEGORIES.reduce(
 		(acc, category) => acc + category.items.length,
+		0,
+	)
+
+	const currentItems = CATEGORIES.reduce(
+		(acc, category) =>
+			acc + category.items.filter((item) => item.current).length,
 		0,
 	)
 
@@ -520,13 +628,29 @@ export function RecommendationsList() {
 				</div>
 				<div className="bg-white p-6">
 					<div className="mb-2 font-mono text-neutral-400 text-xs tracking-widest">
-						[CATEGORIES]
+						[ACTIVE]
 					</div>
 					<div className="font-black font-mono text-4xl text-neutral-950 md:text-5xl">
-						{CATEGORIES.length}
+						{currentItems}
 					</div>
 				</div>
-				<div className="col-span-2 bg-white p-6">
+				<div className="bg-white p-6">
+					<div className="mb-2 font-mono text-neutral-400 text-xs tracking-widest">
+						[FILTER]
+					</div>
+					<button
+						className={`font-mono text-lg transition-colors ${
+							showCurrentOnly
+								? 'font-bold text-neutral-950'
+								: 'text-neutral-400 hover:text-neutral-600'
+						}`}
+						onClick={() => setShowCurrentOnly(!showCurrentOnly)}
+						type="button"
+					>
+						{showCurrentOnly ? '[CURRENT_ONLY]' : '[SHOW_ALL]'}
+					</button>
+				</div>
+				<div className="bg-white p-6">
 					<div className="mb-2 font-mono text-neutral-400 text-xs tracking-widest">
 						[SEARCH_QUERY]
 					</div>
@@ -553,7 +677,7 @@ export function RecommendationsList() {
 								</h2>
 								<span className="font-mono text-neutral-400 text-sm">
 									{(categoryIndex + 1).toString().padStart(2, '0')}/
-									{CATEGORIES.length.toString().padStart(2, '0')}
+									{filteredCategories.length.toString().padStart(2, '0')}
 								</span>
 							</div>
 							<div className="grid gap-px bg-neutral-200 sm:grid-cols-2 lg:grid-cols-3">
@@ -561,7 +685,11 @@ export function RecommendationsList() {
 									const logoUrl = LOGO_MAP[item.name]
 									return (
 										<a
-											className="relative flex flex-col justify-between overflow-hidden bg-white p-6 transition-colors duration-200 hover:bg-neutral-50"
+											className={`relative flex flex-col justify-between overflow-hidden p-6 transition-colors duration-200 hover:bg-neutral-50 ${
+												item.current
+													? 'bg-white ring-2 ring-neutral-950 ring-inset'
+													: 'bg-white'
+											}`}
 											href={item.url}
 											key={item.name}
 											rel="noopener noreferrer"
@@ -579,14 +707,21 @@ export function RecommendationsList() {
 												/>
 											)}
 											<div className="relative z-10">
-												<TextScramble
-													as="h3"
-													className="font-bold font-mono text-lg text-neutral-900 uppercase tracking-tight"
-													duration={0.6}
-													speed={0.03}
-												>
-													{item.name}
-												</TextScramble>
+												<div className="flex items-center gap-2">
+													<TextScramble
+														as="h3"
+														className="font-bold font-mono text-lg text-neutral-900 uppercase tracking-tight"
+														duration={0.6}
+														speed={0.03}
+													>
+														{item.name}
+													</TextScramble>
+													{item.current === true && (
+														<span className="font-mono text-neutral-400 text-xs">
+															[ACTIVE]
+														</span>
+													)}
+												</div>
 												<p className="mt-2 font-mono text-neutral-600 text-sm">
 													{item.description}
 												</p>
