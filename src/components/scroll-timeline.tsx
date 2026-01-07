@@ -356,14 +356,16 @@ const MILESTONES = [
 
 export function ScrollTimeline() {
 	return (
-		<div className="relative mx-auto max-w-3xl px-4 pb-24 pt-12 font-mono">
+		<div className="relative mx-auto max-w-3xl px-4 pt-12 pb-24 font-mono">
 			<div className="mb-12 text-neutral-500 text-sm">
 				<span className="text-neutral-400">$</span> history | grep "career"
 				--sort=date --reverse
 			</div>
 
 			<div className="relative">
-				<div className="space-y-12">
+				<div className="absolute top-3 bottom-3 left-[27px] w-px bg-neutral-200 md:left-[27px]" />
+
+				<div className="space-y-0">
 					{MILESTONES.toReversed().map((item) => (
 						<TimelineItem
 							item={item}
@@ -390,107 +392,140 @@ function TimelineItem({ item }: { item: (typeof MILESTONES)[0] }) {
 	return (
 		<div
 			className={cn(
-				'group relative flex flex-col',
-				isSubtle ? 'gap-2' : 'gap-3',
+				'group relative flex gap-6 md:gap-8',
+				isSubtle ? 'pb-8' : 'pb-16',
+				'last:pb-0',
 			)}
 			ref={ref}
 		>
-			<div className="flex items-center gap-2">
+			<div className="flex w-[54px] flex-none flex-col items-center">
 				<div
 					className={cn(
-						'inline-flex items-center gap-1.5 rounded-md bg-neutral-100 px-2 py-1 font-bold text-neutral-900 transition-colors duration-500',
-						isSubtle ? 'text-xs' : 'text-xs',
+						'absolute top-[18px] left-[28px] h-px bg-neutral-200 transition-all duration-500',
+						isInView ? 'w-6 opacity-100' : 'w-0 opacity-0',
+					)}
+				/>
+
+				<div
+					className={cn(
+						'relative z-10 mt-[9px] flex items-center justify-center rounded-full border bg-white ring-8 ring-white transition-all duration-500',
+						isSubtle
+							? 'h-3 w-3 border-neutral-300 bg-neutral-100'
+							: 'h-5 w-5 border-neutral-900 bg-white',
+						isInView ? 'scale-100 opacity-100' : 'scale-0 opacity-0',
 					)}
 				>
-					<Icon className="size-3" />
-					{item.year}
+					{!isSubtle && (
+						<div className="h-1.5 w-1.5 rounded-full bg-neutral-900" />
+					)}
 				</div>
 			</div>
 
-			<div className="relative border-neutral-200 border-l-2 pl-4">
-				{hasCommand ? (
-					<div className="mb-4 font-mono text-xs">
-						<div className="flex items-center gap-2 text-neutral-500">
-							<span className="font-bold text-neutral-500">$</span>
-							<span className="opacity-75">
-								{isInView ? (
-									<CliTypewriter
-										hideCursorOnComplete
-										onComplete={() => setCommandComplete(true)}
-										showCursor={false}
-										startDelay={200}
-										text={item.command}
-										typingSpeed={shouldReduceMotion ? 0 : 40}
-									/>
-								) : null}
-							</span>
-						</div>
-						{'ongoing' in item && item.ongoing && commandComplete ? (
-							<BuildingIndicator />
-						) : null}
-					</div>
-				) : null}
-
-				<h3
-					className={cn(
-						'mb-2 font-bold tracking-tight',
-						isSubtle ? 'text-neutral-500 text-sm' : 'text-neutral-900 text-xl',
-					)}
-				>
-					{isInView && (hasCommand ? commandComplete : true) ? (
-						<CliTypewriter
-							hideCursorOnComplete
-							onComplete={() => setTitleComplete(true)}
-							startDelay={hasCommand ? 100 : 200}
-							text={item.title}
-							typingSpeed={shouldReduceMotion ? 0 : 30}
-						/>
-					) : null}
-				</h3>
-
-				<motion.div
-					animate={titleComplete ? { opacity: 1 } : { opacity: 0 }}
-					initial={{ opacity: 0 }}
-					transition={{ duration: 0.4 }}
-				>
+			<div className="min-w-0 flex-1 pt-1">
+				<div className="mb-4 flex items-center gap-3">
 					<div
 						className={cn(
-							'font-medium text-neutral-500',
-							isSubtle ? 'mb-2 text-neutral-400 text-xs' : 'mb-4 text-sm',
+							'inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-neutral-50/50 px-3 py-1 font-medium text-neutral-600 backdrop-blur-sm transition-all duration-500',
+							isSubtle ? 'text-xs' : 'text-xs',
+							isInView
+								? 'translate-x-0 opacity-100'
+								: '-translate-x-4 opacity-0',
 						)}
 					>
-						@{' '}
-						{item.url ? (
-							<a
-								className="underline decoration-neutral-300 underline-offset-2 transition-colors hover:text-neutral-900 hover:decoration-neutral-900"
-								href={item.url}
-								rel="noopener noreferrer"
-								target="_blank"
-							>
-								{item.company}
-							</a>
-						) : (
-							item.company
-						)}
+						<Icon className="size-3.5" />
+						{item.year}
 					</div>
-					{!isSubtle && (
-						<p className="max-w-lg text-neutral-600 text-sm leading-relaxed md:text-base">
-							{item.description}
-						</p>
-					)}
-					{!isSubtle && item.technologies.length > 0 && (
-						<div className="mt-3 flex flex-wrap gap-2">
-							{item.technologies.map((tech) => (
-								<span
-									className="text-neutral-400 text-xs"
-									key={tech}
-								>
-									{tech}
+				</div>
+
+				<div className="relative">
+					{hasCommand ? (
+						<div className="mb-4 font-mono text-xs">
+							<div className="flex items-center gap-2 text-neutral-500">
+								<span className="font-bold text-neutral-500">$</span>
+								<span className="opacity-75">
+									{isInView ? (
+										<CliTypewriter
+											hideCursorOnComplete
+											onComplete={() => setCommandComplete(true)}
+											showCursor={false}
+											startDelay={200}
+											text={item.command}
+											typingSpeed={shouldReduceMotion ? 0 : 40}
+										/>
+									) : null}
 								</span>
-							))}
+							</div>
+							{'ongoing' in item && item.ongoing && commandComplete ? (
+								<BuildingIndicator />
+							) : null}
 						</div>
-					)}
-				</motion.div>
+					) : null}
+
+					<h3
+						className={cn(
+							'mb-2 font-bold tracking-tight',
+							isSubtle
+								? 'text-neutral-500 text-sm'
+								: 'text-neutral-900 text-xl',
+						)}
+					>
+						{isInView && (hasCommand ? commandComplete : true) ? (
+							<CliTypewriter
+								hideCursorOnComplete
+								onComplete={() => setTitleComplete(true)}
+								startDelay={hasCommand ? 100 : 200}
+								text={item.title}
+								typingSpeed={shouldReduceMotion ? 0 : 30}
+							/>
+						) : null}
+					</h3>
+
+					<motion.div
+						animate={
+							titleComplete ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }
+						}
+						initial={{ opacity: 0, y: 10 }}
+						transition={{ duration: 0.4 }}
+					>
+						<div
+							className={cn(
+								'font-medium text-neutral-500',
+								isSubtle ? 'mb-2 text-neutral-400 text-xs' : 'mb-4 text-sm',
+							)}
+						>
+							@{' '}
+							{item.url ? (
+								<a
+									className="underline decoration-neutral-300 underline-offset-2 transition-colors hover:text-neutral-900 hover:decoration-neutral-900"
+									href={item.url}
+									rel="noopener noreferrer"
+									target="_blank"
+								>
+									{item.company}
+								</a>
+							) : (
+								item.company
+							)}
+						</div>
+						{!isSubtle && (
+							<p className="max-w-lg text-neutral-600 text-sm leading-relaxed md:text-base">
+								{item.description}
+							</p>
+						)}
+						{!isSubtle && item.technologies.length > 0 && (
+							<div className="mt-4 flex flex-wrap gap-2">
+								{item.technologies.map((tech) => (
+									<span
+										className="rounded-md bg-neutral-100 px-2 py-1 text-neutral-500 text-xs transition-colors hover:bg-neutral-200"
+										key={tech}
+									>
+										{tech}
+									</span>
+								))}
+							</div>
+						)}
+					</motion.div>
+				</div>
 			</div>
 		</div>
 	)
