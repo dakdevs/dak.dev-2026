@@ -652,9 +652,9 @@ export function RecommendationsList() {
 					<div className="flex items-center gap-2 font-mono text-lg">
 						<button
 							className={`transition-colors ${
-								!showCurrentOnly
-									? 'font-bold text-neutral-950'
-									: 'text-neutral-400 hover:text-neutral-600'
+								showCurrentOnly
+									? 'text-neutral-400 hover:text-neutral-600'
+									: 'font-bold text-neutral-950'
 							}`}
 							onClick={() => setShowCurrentOnly(false)}
 							type="button"
