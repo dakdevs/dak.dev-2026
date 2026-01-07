@@ -474,6 +474,17 @@ const CATEGORIES: Category[] = [
 		],
 	},
 	{
+		name: 'What to Watch',
+		items: [
+			{
+				name: 'TBPN',
+				description: 'Tech news and product reviews',
+				url: 'https://youtube.com/@TBPN',
+				current: true,
+			},
+		],
+	},
+	{
 		name: 'Lifestyle',
 		items: [
 			{
@@ -634,7 +645,7 @@ export function RecommendationsList() {
 						{currentItems}
 					</div>
 				</div>
-				<div className="bg-white p-6">
+				<div className="col-span-2 bg-white p-6 md:col-span-1">
 					<div className="mb-2 font-mono text-neutral-400 text-xs tracking-widest">
 						[FILTER]
 					</div>
@@ -650,7 +661,7 @@ export function RecommendationsList() {
 						{showCurrentOnly ? '[CURRENT_ONLY]' : '[SHOW_ALL]'}
 					</button>
 				</div>
-				<div className="bg-white p-6">
+				<div className="col-span-2 bg-white p-6 md:col-span-1">
 					<div className="mb-2 font-mono text-neutral-400 text-xs tracking-widest">
 						[SEARCH_QUERY]
 					</div>
@@ -665,12 +676,32 @@ export function RecommendationsList() {
 				</div>
 			</div>
 
+			<nav className="mb-16 border-neutral-200 border-b pb-8">
+				<div className="mb-4 font-mono text-neutral-400 text-xs tracking-widest">
+					[JUMP_TO]
+				</div>
+				<div className="flex flex-wrap gap-2">
+					{CATEGORIES.map((category) => (
+						<a
+							className="font-mono text-neutral-600 text-sm underline transition-colors hover:text-neutral-950"
+							href={`#${category.name.toLowerCase().replace(/\s+/g, '-')}`}
+							key={category.name}
+						>
+							{category.name}
+						</a>
+					))}
+				</div>
+			</nav>
+
 			<div className="space-y-16">
 				{filteredCategories.length === 0 ? (
 					<p className="font-mono text-neutral-500">[NO_RESULTS_FOUND]</p>
 				) : (
 					filteredCategories.map((category, categoryIndex) => (
-						<section key={category.name}>
+						<section
+							id={category.name.toLowerCase().replace(/\s+/g, '-')}
+							key={category.name}
+						>
 							<div className="mb-8 flex items-center justify-between border-neutral-900 border-b pb-4">
 								<h2 className="font-black font-mono text-neutral-950 text-xl uppercase tracking-tight">
 									{category.name}
