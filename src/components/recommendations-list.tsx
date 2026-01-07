@@ -649,17 +649,31 @@ export function RecommendationsList() {
 					<div className="mb-2 font-mono text-neutral-400 text-xs tracking-widest">
 						[FILTER]
 					</div>
-					<button
-						className={`font-mono text-lg transition-colors ${
-							showCurrentOnly
-								? 'font-bold text-neutral-950'
-								: 'text-neutral-400 hover:text-neutral-600'
-						}`}
-						onClick={() => setShowCurrentOnly(!showCurrentOnly)}
-						type="button"
-					>
-						{showCurrentOnly ? '[CURRENT_ONLY]' : '[SHOW_ALL]'}
-					</button>
+					<div className="flex items-center gap-2 font-mono text-lg">
+						<button
+							className={`transition-colors ${
+								!showCurrentOnly
+									? 'font-bold text-neutral-950'
+									: 'text-neutral-400 hover:text-neutral-600'
+							}`}
+							onClick={() => setShowCurrentOnly(false)}
+							type="button"
+						>
+							[ALL]
+						</button>
+						<span className="text-neutral-300">/</span>
+						<button
+							className={`transition-colors ${
+								showCurrentOnly
+									? 'font-bold text-neutral-950'
+									: 'text-neutral-400 hover:text-neutral-600'
+							}`}
+							onClick={() => setShowCurrentOnly(true)}
+							type="button"
+						>
+							[ACTIVE]
+						</button>
+					</div>
 				</div>
 				<div className="col-span-2 bg-white p-6 md:col-span-1">
 					<div className="mb-2 font-mono text-neutral-400 text-xs tracking-widest">
