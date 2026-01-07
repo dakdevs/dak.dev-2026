@@ -356,7 +356,7 @@ const MILESTONES = [
 
 export function ScrollTimeline() {
 	return (
-		<div className="relative mx-auto max-w-3xl px-4 py-12 font-mono">
+		<div className="relative mx-auto max-w-3xl px-4 pb-24 pt-12 font-mono">
 			<div className="mb-12 text-neutral-500 text-sm">
 				<span className="text-neutral-400">$</span> history | grep "career"
 				--sort=date --reverse
@@ -378,7 +378,7 @@ export function ScrollTimeline() {
 
 function TimelineItem({ item }: { item: (typeof MILESTONES)[0] }) {
 	const ref = useRef<HTMLDivElement>(null)
-	const isInView = useInView(ref, { once: true, margin: '-20% 0px -20% 0px' })
+	const isInView = useInView(ref, { once: true, margin: '-10% 0px -5% 0px' })
 	const shouldReduceMotion = useReducedMotion()
 	const isSubtle = 'subtle' in item && item.subtle
 	const Icon = 'type' in item ? MILESTONE_ICONS[item.type] : TerminalIcon
