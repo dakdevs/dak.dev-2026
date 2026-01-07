@@ -1,41 +1,44 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 
-import { motion, useInView, useScroll, useSpring } from 'motion/react'
+import { motion, useInView } from 'motion/react'
 
 import { CliTypewriter } from '~/components/cli-typewriter'
-import {
-	BriefcaseIcon,
-	GamepadIcon,
-	GraduationCapIcon,
-	MicrophoneIcon,
-	RocketIcon,
-	TerminalIcon,
-	TrophyIcon,
-	UsersIcon,
-} from '~/components/icons'
+import { TextShimmer } from '~/components/motion-primitives/text-shimmer'
 import { cn } from '~/utils/cn'
 
-const MILESTONE_ICONS = {
-	project: TerminalIcon,
-	job: BriefcaseIcon,
-	education: GraduationCapIcon,
-	talk: MicrophoneIcon,
-	award: TrophyIcon,
-	startup: RocketIcon,
-	community: UsersIcon,
-	gaming: GamepadIcon,
+const URL_PROTOCOL_REGEX = /^https?:\/\//
+const URL_TRAILING_SLASH_REGEX = /\/$/
+
+const TYPE_COLORS = {
+	job: 'bg-blue-950 text-blue-100 border-blue-900',
+	project: 'bg-neutral-900 text-neutral-100 border-neutral-800',
+	startup: 'bg-violet-950 text-violet-100 border-violet-900',
+	gaming: 'bg-emerald-950 text-emerald-100 border-emerald-900',
+	education: 'bg-amber-950 text-amber-100 border-amber-900',
+	talk: 'bg-rose-950 text-rose-100 border-rose-900',
+	award: 'bg-yellow-950 text-yellow-100 border-yellow-900',
+	community: 'bg-cyan-950 text-cyan-100 border-cyan-900',
 } as const
 
-type MilestoneType = keyof typeof MILESTONE_ICONS
+const YEAR_COLORS = {
+	job: 'text-blue-800',
+	project: 'text-neutral-800',
+	startup: 'text-violet-800',
+	gaming: 'text-emerald-800',
+	education: 'text-amber-800',
+	talk: 'text-rose-800',
+	award: 'text-yellow-800',
+	community: 'text-cyan-800',
+} as const
 
 const MILESTONES = [
 	{
 		year: '1997',
 		title: 'Pantry Inventory System',
 		company: 'Home Project',
-		type: 'project' as MilestoneType,
+		type: 'project' as const,
 		description:
 			'Built a pantry inventory system at 6 years old using Visual Basic and Microsoft Access Database.',
 		command: 'run inventory.exe',
@@ -45,17 +48,17 @@ const MILESTONES = [
 		year: '2001',
 		title: 'K.I.D.S.S.',
 		company: 'Kids In Disguise Super Spies',
-		type: 'project' as MilestoneType,
+		type: 'project' as const,
 		description:
 			'Built my first website at 10 years old using Microsoft FrontPage. Had HTACCESS login, members-only area, and forms for submitting spy reports. Inspired by Spy Kids.',
 		command: 'frontpage index.htm',
 		technologies: ['Microsoft FrontPage', 'HTML', 'HTACCESS'],
 	},
 	{
-		year: '2007',
+		year: '2008',
 		title: 'School Newspaper Website',
 		company: 'El Camino Real High School',
-		type: 'project' as MilestoneType,
+		type: 'project' as const,
 		url: 'https://www.ecrchs.net/',
 		description: 'Created the high school newspaper website.',
 		command: 'wp theme activate newspaper',
@@ -65,7 +68,7 @@ const MILESTONES = [
 		year: '2008',
 		title: 'EC Eye Website',
 		company: 'El Camino Real High School',
-		type: 'project' as MilestoneType,
+		type: 'project' as const,
 		url: 'https://www.ecrchs.net/',
 		description:
 			"Built the website for EC Eye, the school's weekly news broadcast that I helped produce.",
@@ -76,7 +79,7 @@ const MILESTONES = [
 		year: '2009',
 		title: 'Graduated',
 		company: 'El Camino Real High School',
-		type: 'education' as MilestoneType,
+		type: 'education' as const,
 		url: 'https://www.ecrchs.net/',
 		description: 'Finished high school. Ready to build.',
 		command: 'exit 0',
@@ -86,7 +89,7 @@ const MILESTONES = [
 		year: '2010',
 		title: 'Lead Full-Stack Developer',
 		company: 'Dellamoda.com',
-		type: 'job' as MilestoneType,
+		type: 'job' as const,
 		description:
 			'Hired as helping hand at Italian leather goods ecommerce store. Redesigned production website, driving record traffic. Built internal tooling. Created Laravel app to circumvent X-Cart via MySQL for automations. Shipped new streamlined returns system.',
 		command: 'php artisan serve',
@@ -104,7 +107,7 @@ const MILESTONES = [
 		year: '2012',
 		title: 'PvP All Day',
 		company: 'Aion Online Community',
-		type: 'gaming' as MilestoneType,
+		type: 'gaming' as const,
 		description:
 			'Built a video showcase site to curate Aion PvP content. Started with WordPress, rewrote in raw PHP in 2014. Added Twitch integration for streamers. 30k monthly active users.',
 		command: 'php -S localhost:8000',
@@ -114,7 +117,7 @@ const MILESTONES = [
 		year: '2016',
 		title: 'Senior Software Engineer',
 		company: 'NCSoft',
-		type: 'job' as MilestoneType,
+		type: 'job' as const,
 		url: 'https://nc.com',
 		description:
 			'Only backend dev on a team of 5, supporting AAA game launches for 100k+ monthly active users. Rebuilt core platform from PHP to Node.js/TypeScript, increasing contributor capacity 500%. Introduced GraphQL boosting performance 500%. Built CI/CD pipelines in Groovy, Node.js Platform SDK, and migrated services to Kubernetes. Relaunched game forums on Invision Power Board with platform integration.',
@@ -136,7 +139,7 @@ const MILESTONES = [
 		year: '2019',
 		title: 'Senior Software Engineer (Lead)',
 		company: 'Weedmaps',
-		type: 'job' as MilestoneType,
+		type: 'job' as const,
 		url: 'https://weedmaps.com',
 		description:
 			'Scaled features to 500k+ businesses and 16M users. Led 8-12 engineer teams. Cut release cadence from months to weekly. Reduced CI build times from 40 min to 5 min with GitHub Actions. Built ML training UI increasing throughput 60%. Migrated platforms from AWS ECS and Rancher to Kubernetes. Optimized DataDog observability costs.',
@@ -162,7 +165,7 @@ const MILESTONES = [
 		year: '2019',
 		title: 'Creator',
 		company: 'Zephyr',
-		type: 'gaming' as MilestoneType,
+		type: 'gaming' as const,
 		ongoing: true,
 		description:
 			'Built a scheduling platform and player toolset for Aion Online. Full-stack solution scaled to 26k MAU at peak.',
@@ -178,10 +181,30 @@ const MILESTONES = [
 		],
 	},
 	{
+		year: '2019',
+		title: 'Co-Owner',
+		company: 'The Web Team',
+		type: 'startup' as const,
+		ongoing: true,
+		description:
+			'Consulting firm helping small to medium sized businesses scale their operations with technology and AI. Delivering custom software solutions, automation, and digital transformation strategies.',
+		command: 'twt --consult',
+		technologies: [
+			'Next.js',
+			'TypeScript',
+			'React',
+			'Node.js',
+			'PostgreSQL',
+			'OpenAI',
+			'AWS',
+			'Vercel',
+		],
+	},
+	{
 		year: '2022',
 		title: 'Co-Founder & Founding Engineer',
 		company: 'Trestle',
-		type: 'startup' as MilestoneType,
+		type: 'startup' as const,
 		url: 'https://gotrestle.com',
 		description:
 			'Architected Next.js/TypeScript foundation supporting $2.1M pre-seed round. Built construction tech platform centralizing project management, growing users from 230 to 2,300 in under a year. Created concurrent vector embedding operations for public records similarity analysis. Led team of 3 engineers.',
@@ -207,8 +230,12 @@ const MILESTONES = [
 		title:
 			'Talk: "CS Master\'s vs Self-Taught: What actually matters in the real world?"',
 		company: 'Moorpark College',
-		type: 'talk' as MilestoneType,
+		type: 'talk' as const,
 		description: 'Joint presentation on career paths in software engineering.',
+		collaborator: {
+			name: 'Steven Alexander Littaua',
+			url: 'https://www.linkedin.com/in/littaua/',
+		},
 		subtle: true,
 		command: '',
 		technologies: [],
@@ -217,7 +244,7 @@ const MILESTONES = [
 		year: '2023',
 		title: 'Lead Developer',
 		company: 'MyAion.xyz',
-		type: 'gaming' as MilestoneType,
+		type: 'gaming' as const,
 		url: 'https://myaion.xyz',
 		ongoing: true,
 		description:
@@ -236,7 +263,7 @@ const MILESTONES = [
 		year: '2023',
 		title: 'Talk: "Observability in Production-grade Environments"',
 		company: 'Fullerton College',
-		type: 'talk' as MilestoneType,
+		type: 'talk' as const,
 		description:
 			'Guest lecture on monitoring, logging, and observability practices.',
 		subtle: true,
@@ -247,7 +274,7 @@ const MILESTONES = [
 		year: '2023',
 		title: 'Talk: "Mastering Understanding in a High-Speed Industry"',
 		company: 'Fullerton College',
-		type: 'talk' as MilestoneType,
+		type: 'talk' as const,
 		description:
 			'Guest lecture on continuous learning and staying current in tech.',
 		subtle: true,
@@ -258,7 +285,7 @@ const MILESTONES = [
 		year: '2024',
 		title: 'Co-Founder & CTO',
 		company: 'Dunbar',
-		type: 'startup' as MilestoneType,
+		type: 'startup' as const,
 		description:
 			'Built Next.js/TypeScript full-stack with tRPC under domain-driven design. Architected async workflows on BullMQ and Trigger.dev. Built Tauri/Rust desktop app for automated browsing and scraping. Created AI ingestion pipelines with Claude, OpenAI, and Gemini for 150+ self-serve users. Secured angel funding.',
 		command: 'bun run trigger:dev',
@@ -284,7 +311,7 @@ const MILESTONES = [
 		year: '2024',
 		title: 'Director of Technology',
 		company: 'tech night!',
-		type: 'community' as MilestoneType,
+		type: 'community' as const,
 		url: 'https://technight.events',
 		ongoing: true,
 		description:
@@ -303,7 +330,7 @@ const MILESTONES = [
 		year: '2024',
 		title: 'Next.js Conference 2024 Community Challenge Winner',
 		company: 'Vercel',
-		type: 'award' as MilestoneType,
+		type: 'award' as const,
 		url: 'https://nextjs.org/conf',
 		description: 'Won the community challenge at Next.js Conf 2024.',
 		subtle: true,
@@ -314,7 +341,7 @@ const MILESTONES = [
 		year: '2025',
 		title: 'Software Engineer (Contract)',
 		company: 'Zero Email',
-		type: 'job' as MilestoneType,
+		type: 'job' as const,
 		url: 'https://0.email',
 		description:
 			'Implemented AI email composer using OpenAI and Google Gemini. Various feature work and bug fixes.',
@@ -336,7 +363,7 @@ const MILESTONES = [
 		year: '2025',
 		title: 'Senior Full-Stack Engineer',
 		company: 'Mercury',
-		type: 'job' as MilestoneType,
+		type: 'job' as const,
 		url: 'https://mercury.com',
 		ongoing: true,
 		description:
@@ -355,46 +382,27 @@ const MILESTONES = [
 ]
 
 export function ScrollTimeline() {
-	const ref = useRef<HTMLDivElement>(null)
-	const { scrollYProgress } = useScroll({
-		target: ref,
-		offset: ['start end', 'end start'],
-	})
-
-	const scaleY = useSpring(scrollYProgress, {
-		stiffness: 100,
-		damping: 30,
-		restDelta: 0.001,
-	})
+	const totalItems = MILESTONES.length
 
 	return (
-		<div
-			className="relative mx-auto max-w-4xl px-4 font-mono"
-			ref={ref}
-		>
-			<div className="mb-16 flex items-center gap-4 text-neutral-400 text-xs uppercase tracking-wider">
-				<span className="h-px flex-1 bg-neutral-200" />
-				<span>$ history | grep "career" --sort=date --reverse</span>
-				<span className="h-px flex-1 bg-neutral-200" />
+		<div className="relative mx-auto max-w-5xl px-4 font-mono">
+			<div className="mb-24 flex items-center justify-between border-neutral-900 border-y py-4">
+				<div className="font-bold text-neutral-500 text-sm uppercase tracking-widest">
+					Index
+				</div>
+				<div className="font-bold text-neutral-500 text-sm uppercase tracking-widest">
+					Specification
+				</div>
 			</div>
 
-			<div className="relative">
-				<div className="absolute top-0 bottom-0 left-[28px] w-px bg-neutral-100 md:left-[28px]" />
-
-				<motion.div
-					className="absolute top-0 bottom-0 left-[28px] w-px origin-top bg-neutral-900/10 md:left-[28px]"
-					style={{ scaleY }}
-				/>
-
-				<div className="space-y-12 pb-32">
-					{MILESTONES.toReversed().map((item, index) => (
-						<TimelineItem
-							index={index}
-							item={item}
-							key={`${item.year}-${item.company}-${item.title}`}
-						/>
-					))}
-				</div>
+			<div className="space-y-0">
+				{MILESTONES.toReversed().map((item, index) => (
+					<TimelineItem
+						index={totalItems - index}
+						item={item}
+						key={`${item.year}-${item.company}-${item.title}`}
+					/>
+				))}
 			</div>
 		</div>
 	)
@@ -411,147 +419,163 @@ function TimelineItem({
 	const isInView = useInView(ref, {
 		once: true,
 		margin: '-10% 0px -10% 0px',
-		amount: 0.2,
+		amount: 0.1,
 	})
-	const isSubtle = 'subtle' in item && item.subtle
-	const Icon = 'type' in item ? MILESTONE_ICONS[item.type] : TerminalIcon
-	const [commandComplete, setCommandComplete] = useState(false)
 
+	const isSubtle = 'subtle' in item && item.subtle
+	const [commandComplete, setCommandComplete] = useState(false)
 	const hasCommand = !isSubtle && item.command
 
+	const displayIndex = index.toString().padStart(2, '0')
+	const typeColor = TYPE_COLORS[item.type] || TYPE_COLORS.project
+	const isOngoing = 'ongoing' in item && item.ongoing
+	const yearColor = isOngoing
+		? YEAR_COLORS[item.type] || YEAR_COLORS.project
+		: 'text-neutral-200'
 	return (
 		<motion.div
-			animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+			animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
 			className={cn(
-				'group relative flex gap-6 md:gap-10',
-				isSubtle &&
-					'opacity-70 grayscale transition-all hover:opacity-100 hover:grayscale-0',
+				'group relative border-neutral-300 border-b border-dashed py-16',
+				isSubtle && 'opacity-60',
 			)}
-			initial={{ opacity: 0, y: 20 }}
+			initial={{ opacity: 0, y: 40 }}
 			ref={ref}
-			transition={{ duration: 0.5, delay: index * 0.05 }}
+			transition={{
+				duration: 0.8,
+				ease: [0.16, 1, 0.3, 1],
+			}}
 		>
-			<div className="flex flex-none flex-col items-center">
-				<div
-					className={cn(
-						'relative z-10 flex h-14 w-14 items-center justify-center rounded-2xl border-2 shadow-sm transition-all duration-500',
-						isSubtle
-							? 'h-8 w-8 rounded-full border-neutral-200 bg-neutral-50'
-							: 'border-neutral-100 bg-white',
-						isInView ? 'scale-100 opacity-100' : 'scale-0 opacity-0',
-					)}
-				>
-					<Icon
-						className={cn(
-							'transition-all duration-500',
-							isSubtle
-								? 'size-3.5 text-neutral-400'
-								: 'size-6 text-neutral-700',
-							'group-hover:scale-110 group-hover:text-black',
-						)}
-					/>
-				</div>
-			</div>
-
-			<div className={cn('min-w-0 flex-1 pt-2', isSubtle && 'pt-0')}>
-				<div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1">
-					<span
-						className={cn(
-							'font-bold font-mono',
-							isSubtle
-								? 'text-neutral-400 text-xs'
-								: 'text-neutral-400 text-sm',
-						)}
-					>
-						{item.year}
-					</span>
-					{!isSubtle && (
-						<span className="h-1 w-1 rounded-full bg-neutral-300" />
-					)}
-					<span
-						className={cn(
-							'font-medium text-neutral-900',
-							isSubtle ? 'text-xs' : 'text-sm',
-						)}
-					>
-						{item.company}
-					</span>
-				</div>
-
-				<h3
-					className={cn(
-						'font-bold text-neutral-900 tracking-tight',
-						isSubtle ? 'text-sm' : 'text-xl md:text-2xl',
-					)}
-				>
-					{item.title}
-				</h3>
-
-				{!!hasCommand && (
-					<div className="mt-3 mb-4 overflow-hidden rounded-md bg-neutral-50 px-3 py-2 font-mono text-xs">
-						<div className="flex items-center gap-2 text-neutral-500">
-							<span className="select-none font-bold text-neutral-400">$</span>
-							<span className="text-neutral-700">
-								{isInView ? (
-									<CliTypewriter
-										hideCursorOnComplete
-										onComplete={() => setCommandComplete(true)}
-										showCursor={false}
-										startDelay={500}
-										text={item.command}
-										typingSpeed={20}
-									/>
-								) : null}
-							</span>
-						</div>
-						{'ongoing' in item && item.ongoing && commandComplete ? (
-							<BuildingIndicator />
-						) : null}
+			<div className="grid gap-8 md:grid-cols-[200px_1fr] md:gap-16">
+				<div className="flex flex-row items-baseline justify-between md:flex-col md:justify-start">
+					<div className="font-mono text-neutral-400 text-sm tracking-widest">
+						NO. {displayIndex}
 					</div>
-				)}
+					{isOngoing ? (
+						<TextShimmer
+							as="div"
+							className={cn(
+								'mt-2 font-black font-mono text-7xl tracking-tighter md:text-8xl',
+								yearColor,
+							)}
+							delay={6}
+							duration={1}
+						>
+							{item.year}
+						</TextShimmer>
+					) : (
+						<div
+							className={cn(
+								'mt-2 font-black font-mono text-7xl tracking-tighter md:text-8xl',
+								yearColor,
+							)}
+						>
+							{item.year}
+						</div>
+					)}
+				</div>
 
-				{!isSubtle && (
-					<>
-						<p className="mt-3 text-neutral-600 leading-relaxed">
-							{item.description}
-						</p>
+				<div className="space-y-8">
+					<div>
+						<div className="mb-2 flex items-center gap-3">
+							<span
+								className={cn(
+									'inline-block border px-2 py-0.5 font-bold font-mono text-xs uppercase tracking-wider',
+									typeColor,
+								)}
+							>
+								{item.type}
+							</span>
+							{!!item.url && (
+								<a
+									className="font-mono text-neutral-400 text-xs underline"
+									href={item.url}
+									rel="noopener noreferrer"
+									target="_blank"
+								>
+									{item.url
+										.replace(URL_PROTOCOL_REGEX, '')
+										.replace(URL_TRAILING_SLASH_REGEX, '')}
+								</a>
+							)}
+						</div>
+						<h3 className="mb-1 font-black font-mono text-3xl text-neutral-900 uppercase leading-none tracking-tight md:text-5xl">
+							{item.title}
+						</h3>
+						<div className="font-mono text-lg text-neutral-500 uppercase tracking-widest">
+							{item.company}
+						</div>
+					</div>
 
-						{item.technologies.length > 0 && (
-							<div className="mt-6 flex flex-wrap gap-2">
-								{item.technologies.map((tech) => (
-									<span
-										className="inline-flex items-center rounded-full border border-neutral-200 bg-white px-2.5 py-0.5 font-medium text-neutral-600 text-xs transition-colors hover:border-neutral-300 hover:bg-neutral-50"
-										key={tech}
-									>
-										{tech}
-									</span>
-								))}
-							</div>
+					<p className="max-w-2xl font-mono text-lg text-neutral-700 leading-relaxed">
+						{item.description}
+						{'collaborator' in item && !!item.collaborator && (
+							<>
+								{' '}
+								Collaboration with{' '}
+								<a
+									className="text-neutral-900 underline"
+									href={item.collaborator.url}
+									rel="noopener noreferrer"
+									target="_blank"
+								>
+									{item.collaborator.name}
+								</a>
+								.
+							</>
 						)}
-					</>
-				)}
+					</p>
+
+					{!!hasCommand && (
+						<div className="mt-8 overflow-hidden rounded-lg bg-neutral-950 font-mono text-neutral-300 text-sm">
+							<div className="flex items-center gap-2 border-neutral-800 border-b bg-neutral-900 px-4 py-2">
+								<div className="h-2 w-2 bg-neutral-700" />
+								<div className="h-2 w-2 bg-neutral-700" />
+								<div className="h-2 w-2 bg-neutral-700" />
+								<div className="ml-2 text-neutral-500 text-xs">
+									bash — 80x24
+								</div>
+							</div>
+							<div className="p-4">
+								<div className="flex gap-2">
+									<span className="text-emerald-500">➜</span>
+									<span className="text-blue-400">~</span>
+									<span className="text-neutral-100">
+										{isInView ? (
+											<CliTypewriter
+												hideCursorOnComplete
+												onComplete={() => setCommandComplete(true)}
+												showCursor={false}
+												startDelay={500}
+												text={item.command}
+												typingSpeed={30}
+											/>
+										) : null}
+									</span>
+								</div>
+								{'ongoing' in item && !!item.ongoing && commandComplete && (
+									<div className="mt-2 text-emerald-500">
+										[PROCESS_RUNNING] Waiting for next instruction...
+									</div>
+								)}
+							</div>
+						</div>
+					)}
+
+					{item.technologies.length > 0 && (
+						<div className="flex flex-wrap gap-2 pt-2">
+							{item.technologies.map((tech) => (
+								<span
+									className="border border-neutral-200 bg-white px-3 py-1 font-mono text-neutral-600 text-xs uppercase tracking-wider"
+									key={tech}
+								>
+									{tech}
+								</span>
+							))}
+						</div>
+					)}
+				</div>
 			</div>
 		</motion.div>
-	)
-}
-
-function BuildingIndicator() {
-	const [dots, setDots] = useState(1)
-
-	useEffect(() => {
-		const interval = setInterval(() => {
-			setDots((d) => (d % 3) + 1)
-		}, 400)
-		return () => clearInterval(interval)
-	}, [])
-
-	return (
-		<div className="mt-1 flex items-center gap-1.5 font-medium text-emerald-600">
-			<span className="relative flex h-2 w-2">
-				<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-				<span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-			</span>
-			active{'.'.repeat(dots)}
-		</div>
 	)
 }

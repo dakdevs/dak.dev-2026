@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import Link from 'next/link'
 
 import { GithubIcon, LinkedInIcon, XIcon } from '~/components/icons'
 
@@ -23,70 +22,43 @@ const socials = [
 
 export default function HomePage() {
 	return (
-		<div className="flex flex-col">
-			<section className="flex min-h-screen flex-col">
-				<header className="flex items-center justify-between p-6">
-					<Image
-						alt="dak.dev"
-						height={32}
-						priority
-						src="/dak-logo.svg"
-						width={80}
-					/>
-					<nav className="flex gap-6">
-						<Link
-							className="font-mono text-neutral-500 text-sm transition-colors hover:text-neutral-900"
-							href="/recommendations"
-						>
-							Recommendations
-						</Link>
-						<Link
-							className="font-mono text-neutral-500 text-sm transition-colors hover:text-neutral-900"
-							href="/career"
-						>
-							Career
-						</Link>
-					</nav>
-				</header>
-				<main className="flex flex-1 flex-col items-center justify-center p-8">
-					<Image
-						alt="Portrait sketch"
-						height={200}
-						src="/sketch.png"
-						width={200}
-					/>
-					<h1 className="mt-6 font-bold font-mono text-2xl tracking-tight">
-						Dak Washbrook
-					</h1>
-					<p className="mt-4 max-w-md text-center text-neutral-600">
-						Software Engineer with 15 years of professional experience and a 20+
-						year track record in software development, known for mastering
-						complex systems and leading scalable, reliable architecture.
-					</p>
-					<nav className="mt-8 flex items-center gap-6">
-						{socials.map((social) => (
-							<a
-								aria-label={social.name}
-								className="text-neutral-500 transition-colors hover:text-neutral-900"
-								href={social.href}
-								key={social.name}
-								rel="noopener noreferrer"
-								target="_blank"
-							>
-								<social.icon className="size-5" />
-							</a>
-						))}
-					</nav>
+		<main className="flex flex-1 flex-col items-center justify-center p-8">
+			<Image
+				alt="Portrait sketch"
+				height={200}
+				src="/sketch.png"
+				width={200}
+			/>
+			<h1 className="mt-6 font-bold font-mono text-2xl tracking-tight">
+				Dak Washbrook
+			</h1>
+			<p className="mt-4 max-w-md text-center text-neutral-600">
+				Software Engineer with 15 years of professional experience and a 20+
+				year track record in software development, known for mastering complex
+				systems and leading scalable, reliable architecture.
+			</p>
+			<nav className="mt-8 flex items-center gap-6">
+				{socials.map((social) => (
 					<a
-						className="mt-12 font-mono text-neutral-400 text-sm transition-colors hover:text-neutral-600"
-						href="https://cal.com/dak"
+						aria-label={social.name}
+						className="text-neutral-500 transition-colors hover:text-neutral-900"
+						href={social.href}
+						key={social.name}
 						rel="noopener noreferrer"
 						target="_blank"
 					>
-						AI Consulting — $750/hr
+						<social.icon className="size-5" />
 					</a>
-				</main>
-			</section>
-		</div>
+				))}
+			</nav>
+			<a
+				className="mt-12 font-mono text-neutral-400 text-sm"
+				href="https://cal.com/dak"
+				rel="noopener noreferrer"
+				target="_blank"
+			>
+				AI Consulting — $750/hr
+			</a>
+		</main>
 	)
 }

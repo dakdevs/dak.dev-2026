@@ -1,6 +1,11 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+
+import { TextScramble } from '~/components/motion-primitives/text-scramble'
+
+const URL_PROTOCOL_REGEX = /^https?:\/\//
+const URL_TRAILING_SLASH_REGEX = /\/$/
 
 const CATEGORIES = [
 	{
@@ -429,6 +434,11 @@ function fuzzyMatch(text: string, query: string): boolean {
 
 export function RecommendationsList() {
 	const [search, setSearch] = useState('')
+	const searchInputRef = useRef<HTMLInputElement>(null)
+
+	useEffect(() => {
+		searchInputRef.current?.focus()
+	}, [])
 
 	const filteredCategories = useMemo(() => {
 		if (!search.trim()) {
@@ -444,42 +454,87 @@ export function RecommendationsList() {
 		})).filter((category) => category.items.length > 0)
 	}, [search])
 
+	const totalItems = CATEGORIES.reduce(
+		(acc, category) => acc + category.items.length,
+		0,
+	)
+
 	return (
-		<>
-			<div className="mb-8">
-				<input
-					className="w-full rounded-lg border border-neutral-200 bg-white px-4 py-3 font-mono text-sm placeholder:text-neutral-400 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-100"
-					onChange={(e) => setSearch(e.target.value)}
-					placeholder="Search recommendations..."
-					type="text"
-					value={search}
-				/>
+		<div className="mx-auto max-w-5xl">
+			<div className="mb-16 grid grid-cols-2 gap-px bg-neutral-200 md:grid-cols-4">
+				<div className="bg-white p-6">
+					<div className="mb-2 font-mono text-neutral-400 text-xs tracking-widest">
+						[TOTAL_ENTRIES]
+					</div>
+					<div className="font-black font-mono text-4xl text-neutral-950 md:text-5xl">
+						{totalItems}
+					</div>
+				</div>
+				<div className="bg-white p-6">
+					<div className="mb-2 font-mono text-neutral-400 text-xs tracking-widest">
+						[CATEGORIES]
+					</div>
+					<div className="font-black font-mono text-4xl text-neutral-950 md:text-5xl">
+						{CATEGORIES.length}
+					</div>
+				</div>
+				<div className="col-span-2 bg-white p-6">
+					<div className="mb-2 font-mono text-neutral-400 text-xs tracking-widest">
+						[SEARCH_QUERY]
+					</div>
+					<input
+						className="w-full border-0 bg-transparent font-mono text-2xl text-neutral-950 placeholder:text-neutral-300 focus:outline-none md:text-3xl"
+						onChange={(e) => setSearch(e.target.value)}
+						placeholder="grep..."
+						ref={searchInputRef}
+						type="text"
+						value={search}
+					/>
+				</div>
 			</div>
 
-			<div className="space-y-12">
+			<div className="space-y-16">
 				{filteredCategories.length === 0 ? (
-					<p className="text-neutral-500">No results found.</p>
+					<p className="font-mono text-neutral-500">[NO_RESULTS_FOUND]</p>
 				) : (
-					filteredCategories.map((category) => (
+					filteredCategories.map((category, categoryIndex) => (
 						<section key={category.name}>
-							<h2 className="mb-6 font-bold font-mono text-neutral-400 text-sm uppercase tracking-wider">
-								{category.name}
-							</h2>
-							<div className="grid gap-4 sm:grid-cols-2">
+							<div className="mb-8 flex items-center justify-between border-neutral-900 border-b pb-4">
+								<h2 className="font-black font-mono text-neutral-950 text-xl uppercase tracking-tight">
+									{category.name}
+								</h2>
+								<span className="font-mono text-neutral-400 text-sm">
+									{(categoryIndex + 1).toString().padStart(2, '0')}/
+									{CATEGORIES.length.toString().padStart(2, '0')}
+								</span>
+							</div>
+							<div className="grid gap-px bg-neutral-200 sm:grid-cols-2 lg:grid-cols-3">
 								{category.items.map((item) => (
 									<a
-										className="group rounded-lg border border-neutral-200 p-4 transition-all hover:border-neutral-300 hover:bg-neutral-50"
+										className="flex flex-col justify-between bg-white p-6 transition-colors duration-200 hover:bg-neutral-50"
 										href={item.url}
 										key={item.name}
 										rel="noopener noreferrer"
 										target="_blank"
 									>
-										<h3 className="font-bold font-mono text-neutral-900 group-hover:text-neutral-700">
-											{item.name}
-										</h3>
-										<p className="mt-1 text-neutral-500 text-sm">
-											{item.description}
-										</p>
+										<div>
+											<TextScramble
+												as="h3"
+												className="font-bold font-mono text-lg text-neutral-900 uppercase tracking-tight"
+												duration={0.6}
+												speed={0.03}
+											>
+												{item.name}
+											</TextScramble>
+											<p className="mt-2 font-mono text-neutral-600 text-sm">
+												{item.description}
+											</p>
+										</div>
+										<div className="mt-4 font-mono text-neutral-400 text-xs underline">
+											{item.url
+												.replace(URL_PROTOCOL_REGEX, '')
+												.replace(URL_TRAILING_SLASH_REGEX, '')}
+										</div>
 									</a>
 								))}
 							</div>
@@ -487,6 +542,6 @@ export function RecommendationsList() {
 					))
 				)}
 			</div>
-		</>
+		</div>
 	)
 }
