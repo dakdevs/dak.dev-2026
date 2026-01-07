@@ -821,6 +821,20 @@ export function RecommendationsList() {
 											rel="noopener noreferrer"
 											target="_blank"
 										>
+											{item.current === true ? (
+												<span className="absolute top-6 right-6 z-10 flex items-center gap-1.5 font-mono text-neutral-400 text-xs">
+													[ACTIVE]
+													<span className="relative flex h-2 w-2">
+														<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
+														<span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
+													</span>
+												</span>
+											) : (
+												<span className="absolute top-6 right-6 z-10 flex items-center gap-1.5 font-mono text-neutral-400 text-xs">
+													[INACTIVE]
+													<span className="h-2 w-2 rounded-full bg-neutral-300" />
+												</span>
+											)}
 											{logoUrl !== undefined && (
 												<Image
 													alt=""
@@ -833,30 +847,14 @@ export function RecommendationsList() {
 												/>
 											)}
 											<div className="relative z-10">
-												<div className="flex items-center gap-2">
-													<TextScramble
-														as="h3"
-														className="font-bold font-mono text-lg text-neutral-900 uppercase tracking-tight"
-														duration={0.6}
-														speed={0.03}
-													>
-														{item.name}
-													</TextScramble>
-													{item.current === true ? (
-														<span className="flex items-center gap-1.5 font-mono text-neutral-400 text-xs">
-															[ACTIVE]
-															<span className="relative flex h-2 w-2">
-																<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
-																<span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
-															</span>
-														</span>
-													) : (
-														<span className="flex items-center gap-1.5 font-mono text-neutral-400 text-xs">
-															[INACTIVE]
-															<span className="h-2 w-2 rounded-full bg-neutral-300" />
-														</span>
-													)}
-												</div>
+												<TextScramble
+													as="h3"
+													className="font-bold font-mono text-lg text-neutral-900 uppercase tracking-tight"
+													duration={0.6}
+													speed={0.03}
+												>
+													{item.name}
+												</TextScramble>
 												<p className="mt-2 font-mono text-neutral-600 text-sm">
 													{item.description}
 												</p>
