@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 
 import { GithubIcon, LinkedInIcon, XIcon } from '~/components/icons'
 import { ScrollTimeline } from '~/components/scroll-timeline'
@@ -25,7 +26,7 @@ export default function HomePage() {
 	return (
 		<div className="flex flex-col">
 			<section className="flex min-h-screen flex-col">
-				<header className="flex justify-center p-6">
+				<header className="flex items-center justify-between p-6">
 					<Image
 						alt="dak.dev"
 						height={32}
@@ -33,6 +34,14 @@ export default function HomePage() {
 						src="/dak-logo.svg"
 						width={80}
 					/>
+					<nav>
+						<Link
+							className="font-mono text-neutral-500 text-sm transition-colors hover:text-neutral-900"
+							href="/recommendations"
+						>
+							Recommendations
+						</Link>
+					</nav>
 				</header>
 				<main className="flex flex-1 flex-col items-center justify-center p-8">
 					<Image

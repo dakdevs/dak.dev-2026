@@ -1,0 +1,492 @@
+'use client'
+
+import { useMemo, useState } from 'react'
+
+const CATEGORIES = [
+	{
+		name: 'IDEs',
+		items: [
+			{
+				name: 'Zed',
+				description: 'High-performance code editor',
+				url: 'https://zed.dev',
+			},
+			{
+				name: 'Cursor',
+				description: 'AI-powered code editor built on VSCode',
+				url: 'https://cursor.com',
+			},
+			{
+				name: 'WebStorm',
+				description: 'JavaScript and TypeScript IDE',
+				url: 'https://jetbrains.com/webstorm',
+			},
+			{
+				name: 'GoLand',
+				description: 'Go IDE with smart coding assistance',
+				url: 'https://jetbrains.com/go',
+			},
+			{
+				name: 'RustRover',
+				description: 'Rust IDE with deep code insight',
+				url: 'https://jetbrains.com/rust',
+			},
+			{
+				name: 'IntelliJ IDEA Ultimate',
+				description: 'Full-stack Java and polyglot IDE',
+				url: 'https://jetbrains.com/idea',
+			},
+		],
+	},
+	{
+		name: 'AI Models',
+		items: [
+			{
+				name: 'Claude',
+				description: 'AI assistant by Anthropic',
+				url: 'https://claude.ai',
+			},
+			{
+				name: 'ChatGPT',
+				description: 'AI assistant by OpenAI',
+				url: 'https://chatgpt.com',
+			},
+			{
+				name: 'Google AI',
+				description: 'Gemini and AI tools',
+				url: 'https://ai.google',
+			},
+			{
+				name: 'Suno',
+				description: 'AI music generation',
+				url: 'https://suno.com',
+			},
+		],
+	},
+	{
+		name: 'AI Tools',
+		items: [
+			{
+				name: 'OpenCode',
+				description: 'Terminal-based AI coding assistant',
+				url: 'https://github.com/opencode-ai/opencode',
+			},
+			{
+				name: 'Oh My OpenCode',
+				description: 'Configuration framework for OpenCode',
+				url: 'https://github.com/code-yeongyu/oh-my-opencode',
+			},
+		],
+	},
+	{
+		name: 'Dev Tools',
+		items: [
+			{
+				name: 'Ghostty',
+				description: 'Fast, native terminal emulator',
+				url: 'https://ghostty.org',
+			},
+			{
+				name: 'OrbStack',
+				description: 'Fast Docker and Linux on Mac',
+				url: 'https://orbstack.dev',
+			},
+			{
+				name: 'Conar',
+				description: 'AI-powered Postgres database manager',
+				url: 'https://conar.app',
+			},
+			{
+				name: 'Yaak',
+				description: 'Modern API client',
+				url: 'https://yaak.app',
+			},
+			{
+				name: 'Tailscale',
+				description: 'Zero-config VPN',
+				url: 'https://tailscale.com',
+			},
+		],
+	},
+	{
+		name: 'Browsers',
+		items: [
+			{
+				name: 'Dia',
+				description: 'AI-native browser',
+				url: 'https://dia.dev',
+			},
+			{
+				name: 'Zen',
+				description: 'Privacy-focused Firefox fork',
+				url: 'https://zen-browser.app',
+			},
+			{
+				name: 'Comet',
+				description: 'Minimalist browser for Mac',
+				url: 'https://usecomet.app',
+			},
+		],
+	},
+	{
+		name: 'Tech Stack',
+		items: [
+			{
+				name: 'React',
+				description: 'UI library for building interfaces',
+				url: 'https://react.dev',
+			},
+			{
+				name: 'Next.js',
+				description: 'React framework for production',
+				url: 'https://nextjs.org',
+			},
+			{
+				name: 'TypeScript',
+				description: 'JavaScript with types',
+				url: 'https://typescriptlang.org',
+			},
+			{
+				name: 'Tailwind CSS',
+				description: 'Utility-first CSS framework',
+				url: 'https://tailwindcss.com',
+			},
+			{
+				name: 'AWS',
+				description: 'Cloud computing platform',
+				url: 'https://aws.amazon.com',
+			},
+			{
+				name: 'PostgreSQL',
+				description: 'Advanced open source database',
+				url: 'https://postgresql.org',
+			},
+			{
+				name: 'MySQL',
+				description: 'Popular relational database',
+				url: 'https://mysql.com',
+			},
+			{
+				name: 'Zod',
+				description: 'TypeScript-first schema validation',
+				url: 'https://zod.dev',
+			},
+			{
+				name: 'oRPC',
+				description: 'End-to-end typesafe APIs',
+				url: 'https://orpc.unnoq.com',
+			},
+			{
+				name: 'Playwright',
+				description: 'End-to-end testing framework',
+				url: 'https://playwright.dev',
+			},
+			{
+				name: 'Vitest',
+				description: 'Fast unit testing framework',
+				url: 'https://vitest.dev',
+			},
+			{
+				name: 'Vite',
+				description: 'Next-gen frontend build tool',
+				url: 'https://vite.dev',
+			},
+			{
+				name: 'Jotai',
+				description: 'Primitive and flexible state for React',
+				url: 'https://jotai.org',
+			},
+			{
+				name: 'Workflow',
+				description: 'Durable workflow engine',
+				url: 'https://useworkflow.dev',
+			},
+			{
+				name: 'AI SDK',
+				description: 'Build AI-powered applications',
+				url: 'https://ai-sdk.dev',
+			},
+		],
+	},
+	{
+		name: 'Dev Libraries',
+		items: [
+			{
+				name: '@t3-oss/env-core',
+				description: 'Type-safe environment variables',
+				url: 'https://env.t3.gg',
+			},
+			{
+				name: 'Drizzle ORM',
+				description: 'TypeScript ORM for SQL databases',
+				url: 'https://orm.drizzle.team',
+			},
+			{
+				name: 'Effect',
+				description: 'TypeScript library for complex applications',
+				url: 'https://effect.website',
+			},
+			{
+				name: 'Better Auth',
+				description: 'Authentication library for TypeScript',
+				url: 'https://better-auth.com',
+			},
+			{
+				name: 'Remeda',
+				description: 'Functional utility library for TypeScript',
+				url: 'https://remedajs.com',
+			},
+		],
+	},
+	{
+		name: 'Infrastructure',
+		items: [
+			{
+				name: 'Vercel',
+				description: 'Deploy and scale web apps',
+				url: 'https://vercel.com',
+			},
+			{
+				name: 'Cloudflare',
+				description: 'CDN, DNS, and edge computing',
+				url: 'https://cloudflare.com',
+			},
+			{
+				name: 'PlanetScale',
+				description: 'Serverless MySQL platform',
+				url: 'https://planetscale.com',
+			},
+		],
+	},
+	{
+		name: 'Productivity',
+		items: [
+			{
+				name: 'Raycast',
+				description: 'Launcher and productivity tool for Mac',
+				url: 'https://raycast.com',
+			},
+			{
+				name: 'Linear',
+				description: 'Issue tracking built for speed',
+				url: 'https://linear.app',
+			},
+			{
+				name: 'Notion',
+				description: 'All-in-one workspace',
+				url: 'https://notion.so',
+			},
+			{
+				name: 'Hey Email',
+				description: 'Email that screens out the noise',
+				url: 'https://hey.com',
+			},
+			{
+				name: 'Screen Studio',
+				description: 'Beautiful screen recordings for Mac',
+				url: 'https://screen.studio',
+			},
+		],
+	},
+	{
+		name: 'Tech Tools',
+		items: [
+			{
+				name: 'DaisyDisk',
+				description: 'Disk space analyzer for Mac',
+				url: 'https://daisydiskapp.com',
+			},
+			{
+				name: '1Password',
+				description: 'Password manager',
+				url: 'https://1password.com',
+			},
+		],
+	},
+	{
+		name: 'Communications',
+		items: [
+			{
+				name: 'Slack',
+				description: 'Team messaging and collaboration',
+				url: 'https://slack.com',
+			},
+			{
+				name: 'Discord',
+				description: 'Voice, video, and text chat',
+				url: 'https://discord.com',
+			},
+		],
+	},
+	{
+		name: 'Social Media',
+		items: [
+			{
+				name: 'X',
+				description: 'Real-time social network',
+				url: 'https://x.com/dakdevs',
+			},
+		],
+	},
+	{
+		name: 'Creator Tools',
+		items: [
+			{
+				name: 'Hollyland',
+				description: 'Wireless microphone systems',
+				url: 'https://amzn.to/49NuHl9',
+			},
+			{
+				name: 'Insta360 Link 2',
+				description: 'AI-powered 4K webcam',
+				url: 'https://amzn.to/4jumR4c',
+			},
+			{
+				name: 'Elgato Stream Deck +',
+				description: 'Studio controller with LCD keys and dials',
+				url: 'https://amzn.to/4suFk4A',
+			},
+			{
+				name: 'OBS',
+				description: 'Open source streaming and recording',
+				url: 'https://obsproject.com',
+			},
+		],
+	},
+	{
+		name: 'Finance',
+		items: [
+			{
+				name: 'Mercury',
+				description: 'Banking for startups',
+				url: 'https://mercury.com/share/dakdevs',
+			},
+			{
+				name: 'Robinhood',
+				description: 'Commission-free investing',
+				url: 'https://robinhood.com',
+			},
+		],
+	},
+	{
+		name: 'Entertainment',
+		items: [
+			{
+				name: 'Apple TV+',
+				description: 'Streaming service',
+				url: 'https://apple.com/apple-tv-plus',
+			},
+			{
+				name: 'Spotify',
+				description: 'Music streaming service',
+				url: 'https://spotify.com',
+			},
+			{
+				name: 'Apple Music',
+				description: 'Lossless audio streaming',
+				url: 'https://apple.com/apple-music',
+			},
+			{
+				name: 'Tidal',
+				description: 'Hi-fi music streaming',
+				url: 'https://tidal.com',
+			},
+		],
+	},
+	{
+		name: 'Lifestyle',
+		items: [
+			{
+				name: 'Eight Sleep',
+				description: 'Smart mattress cover with temperature control',
+				url: 'https://refer.eight.sl/dak74975',
+			},
+			{
+				name: 'Tesla',
+				description: 'Electric vehicles and energy',
+				url: 'https://tesla.com',
+			},
+		],
+	},
+]
+
+function fuzzyMatch(text: string, query: string): boolean {
+	const lowerText = text.toLowerCase()
+	const lowerQuery = query.toLowerCase()
+
+	let queryIndex = 0
+	for (
+		let i = 0;
+		i < lowerText.length && queryIndex < lowerQuery.length;
+		i += 1
+	) {
+		if (lowerText[i] === lowerQuery[queryIndex]) {
+			queryIndex += 1
+		}
+	}
+	return queryIndex === lowerQuery.length
+}
+
+export function RecommendationsList() {
+	const [search, setSearch] = useState('')
+
+	const filteredCategories = useMemo(() => {
+		if (!search.trim()) {
+			return CATEGORIES
+		}
+
+		return CATEGORIES.map((category) => ({
+			...category,
+			items: category.items.filter(
+				(item) =>
+					fuzzyMatch(item.name, search) || fuzzyMatch(item.description, search),
+			),
+		})).filter((category) => category.items.length > 0)
+	}, [search])
+
+	return (
+		<>
+			<div className="mb-8">
+				<input
+					className="w-full rounded-lg border border-neutral-200 bg-white px-4 py-3 font-mono text-sm placeholder:text-neutral-400 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-100"
+					onChange={(e) => setSearch(e.target.value)}
+					placeholder="Search recommendations..."
+					type="text"
+					value={search}
+				/>
+			</div>
+
+			<div className="space-y-12">
+				{filteredCategories.length === 0 ? (
+					<p className="text-neutral-500">No results found.</p>
+				) : (
+					filteredCategories.map((category) => (
+						<section key={category.name}>
+							<h2 className="mb-6 font-bold font-mono text-neutral-400 text-sm uppercase tracking-wider">
+								{category.name}
+							</h2>
+							<div className="grid gap-4 sm:grid-cols-2">
+								{category.items.map((item) => (
+									<a
+										className="group rounded-lg border border-neutral-200 p-4 transition-all hover:border-neutral-300 hover:bg-neutral-50"
+										href={item.url}
+										key={item.name}
+										rel="noopener noreferrer"
+										target="_blank"
+									>
+										<h3 className="font-bold font-mono text-neutral-900 group-hover:text-neutral-700">
+											{item.name}
+										</h3>
+										<p className="mt-1 text-neutral-500 text-sm">
+											{item.description}
+										</p>
+									</a>
+								))}
+							</div>
+						</section>
+					))
+				)}
+			</div>
+		</>
+	)
+}
