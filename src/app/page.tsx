@@ -50,7 +50,10 @@ export default function HomePage() {
 						src="/sketch.png"
 						width={200}
 					/>
-					<p className="mt-6 max-w-md text-center text-neutral-600">
+					<h1 className="mt-6 font-bold font-mono text-2xl tracking-tight">
+						Dak Washbrook
+					</h1>
+					<p className="mt-4 max-w-md text-center text-neutral-600">
 						Software Engineer with 15 years of professional experience and a 20+
 						year track record in software development, known for mastering
 						complex systems and leading scalable, reliable architecture.
@@ -69,6 +72,14 @@ export default function HomePage() {
 							</a>
 						))}
 					</nav>
+					<a
+						className="mt-12 font-mono text-neutral-400 text-sm transition-colors hover:text-neutral-600"
+						href="https://cal.com/dak"
+						rel="noopener noreferrer"
+						target="_blank"
+					>
+						AI Consulting — $750/hr
+					</a>
 				</main>
 			</section>
 			<ScrollTimeline />
