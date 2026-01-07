@@ -9,7 +9,7 @@ export const SCREENSHOT_MAP: Record<string, string> = {
 	'https://chatgpt.com': '/screenshots/chatgpt.jpg',
 	'https://ai.google': '/screenshots/google-ai.jpg',
 	'https://suno.com': '/screenshots/suno.jpg',
-	'https://github.com/opencode-ai/opencode': '/screenshots/ai-tools.jpg',
+	'https://opencode.ai': '/screenshots/opencode.jpg',
 	'https://github.com/code-yeongyu/oh-my-opencode':
 		'/screenshots/oh-my-opencode.jpg',
 	'https://ghostty.org': '/screenshots/dev-tools.jpg',

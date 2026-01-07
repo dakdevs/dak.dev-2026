@@ -141,7 +141,7 @@ const CATEGORIES: Category[] = [
 			{
 				name: 'OpenCode',
 				description: 'Terminal-based AI coding assistant',
-				url: 'https://github.com/opencode-ai/opencode',
+				url: 'https://opencode.ai',
 				current: true,
 			},
 			{
