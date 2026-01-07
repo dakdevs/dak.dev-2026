@@ -17,6 +17,7 @@ const LOGO_MAP: Record<string, string> = {
 	ChatGPT: 'https://svgl.app/library/openai.svg',
 	Claude: 'https://svgl.app/library/anthropic_black.svg',
 	Cloudflare: 'https://svgl.app/library/cloudflare.svg',
+	Convex: 'https://svgl.app/library/convex_dark.svg',
 	Cursor: 'https://svgl.app/library/cursor_dark.svg',
 	Discord: 'https://svgl.app/library/discord.svg',
 	'Drizzle ORM': 'https://svgl.app/library/drizzle-orm_dark.svg',
@@ -128,6 +129,7 @@ const CATEGORIES: Category[] = [
 				name: 'Suno',
 				description: 'AI music generation',
 				url: 'https://suno.com',
+				current: true,
 			},
 		],
 	},
@@ -161,21 +163,25 @@ const CATEGORIES: Category[] = [
 				name: 'OrbStack',
 				description: 'Fast Docker and Linux on Mac',
 				url: 'https://orbstack.dev',
+				current: true,
 			},
 			{
 				name: 'Conar',
 				description: 'AI-powered Postgres database manager',
 				url: 'https://conar.app',
+				current: true,
 			},
 			{
 				name: 'Yaak',
 				description: 'Modern API client',
 				url: 'https://yaak.app',
+				current: true,
 			},
 			{
 				name: 'Tailscale',
 				description: 'Zero-config VPN',
 				url: 'https://tailscale.com',
+				current: true,
 			},
 		],
 	},
@@ -183,15 +189,15 @@ const CATEGORIES: Category[] = [
 		name: 'Browsers',
 		items: [
 			{
-				name: 'Dia',
-				description: 'AI-native browser',
-				url: 'https://dia.dev',
-			},
-			{
 				name: 'Zen',
 				description: 'Privacy-focused Firefox fork',
 				url: 'https://zen-browser.app',
 				current: true,
+			},
+			{
+				name: 'Dia',
+				description: 'AI-native browser',
+				url: 'https://dia.dev',
 			},
 			{
 				name: 'Comet',
@@ -231,56 +237,73 @@ const CATEGORIES: Category[] = [
 				name: 'AWS',
 				description: 'Cloud computing platform',
 				url: 'https://aws.amazon.com',
+				current: true,
 			},
 			{
 				name: 'PostgreSQL',
 				description: 'Advanced open source database',
 				url: 'https://postgresql.org',
+				current: true,
 			},
 			{
 				name: 'MySQL',
 				description: 'Popular relational database',
 				url: 'https://mysql.com',
+				current: true,
 			},
 			{
 				name: 'Zod',
 				description: 'TypeScript-first schema validation',
 				url: 'https://zod.dev',
+				current: true,
 			},
 			{
 				name: 'oRPC',
 				description: 'End-to-end typesafe APIs',
 				url: 'https://orpc.unnoq.com',
+				current: true,
 			},
 			{
 				name: 'Playwright',
 				description: 'End-to-end testing framework',
 				url: 'https://playwright.dev',
+				current: true,
 			},
 			{
 				name: 'Vitest',
 				description: 'Fast unit testing framework',
 				url: 'https://vitest.dev',
+				current: true,
 			},
 			{
 				name: 'Vite',
 				description: 'Next-gen frontend build tool',
 				url: 'https://vite.dev',
+				current: true,
 			},
 			{
 				name: 'Jotai',
 				description: 'Primitive and flexible state for React',
 				url: 'https://jotai.org',
+				current: true,
 			},
 			{
 				name: 'Workflow',
 				description: 'Durable workflow engine',
 				url: 'https://useworkflow.dev',
+				current: true,
 			},
 			{
 				name: 'AI SDK',
 				description: 'Build AI-powered applications',
 				url: 'https://ai-sdk.dev',
+				current: true,
+			},
+			{
+				name: 'TanStack',
+				description: 'High-quality open-source libraries for web dev',
+				url: 'https://tanstack.com',
+				current: true,
 			},
 		],
 	},
@@ -291,6 +314,7 @@ const CATEGORIES: Category[] = [
 				name: '@t3-oss/env-core',
 				description: 'Type-safe environment variables',
 				url: 'https://env.t3.gg',
+				current: true,
 			},
 			{
 				name: 'Drizzle ORM',
@@ -302,16 +326,19 @@ const CATEGORIES: Category[] = [
 				name: 'Effect',
 				description: 'TypeScript library for complex applications',
 				url: 'https://effect.website',
+				current: true,
 			},
 			{
 				name: 'Better Auth',
 				description: 'Authentication library for TypeScript',
 				url: 'https://better-auth.com',
+				current: true,
 			},
 			{
 				name: 'Remeda',
 				description: 'Functional utility library for TypeScript',
 				url: 'https://remedajs.com',
+				current: true,
 			},
 		],
 	},
@@ -333,6 +360,13 @@ const CATEGORIES: Category[] = [
 				name: 'PlanetScale',
 				description: 'Serverless MySQL platform',
 				url: 'https://planetscale.com',
+				current: true,
+			},
+			{
+				name: 'Convex',
+				description: 'Reactive backend platform',
+				url: 'https://convex.dev/referral/DAKWAS5392',
+				current: true,
 			},
 		],
 	},
@@ -349,31 +383,31 @@ const CATEGORIES: Category[] = [
 				name: 'Linear',
 				description: 'Issue tracking built for speed',
 				url: 'https://linear.app',
+				current: true,
 			},
 			{
 				name: 'Notion',
 				description: 'All-in-one workspace',
 				url: 'https://notion.so',
+				current: true,
 			},
 			{
 				name: 'Hey Email',
 				description: 'Email that screens out the noise',
 				url: 'https://hey.com',
+				current: true,
 			},
 			{
 				name: 'Screen Studio',
 				description: 'Beautiful screen recordings for Mac',
 				url: 'https://screen.studio',
+				current: true,
 			},
-		],
-	},
-	{
-		name: 'Tech Tools',
-		items: [
 			{
 				name: 'DaisyDisk',
 				description: 'Disk space analyzer for Mac',
 				url: 'https://daisydiskapp.com',
+				current: true,
 			},
 			{
 				name: '1Password',
@@ -390,11 +424,13 @@ const CATEGORIES: Category[] = [
 				name: 'Slack',
 				description: 'Team messaging and collaboration',
 				url: 'https://slack.com',
+				current: true,
 			},
 			{
 				name: 'Discord',
 				description: 'Voice, video, and text chat',
 				url: 'https://discord.com',
+				current: true,
 			},
 		],
 	},
@@ -405,6 +441,7 @@ const CATEGORIES: Category[] = [
 				name: 'X',
 				description: 'Real-time social network',
 				url: 'https://x.com/dakdevs',
+				current: true,
 			},
 		],
 	},
@@ -415,21 +452,25 @@ const CATEGORIES: Category[] = [
 				name: 'Hollyland',
 				description: 'Wireless microphone systems',
 				url: 'https://amzn.to/49NuHl9',
+				current: true,
 			},
 			{
 				name: 'Insta360 Link 2',
 				description: 'AI-powered 4K webcam',
 				url: 'https://amzn.to/4jumR4c',
+				current: true,
 			},
 			{
 				name: 'Elgato Stream Deck +',
 				description: 'Studio controller with LCD keys and dials',
 				url: 'https://amzn.to/4suFk4A',
+				current: true,
 			},
 			{
 				name: 'OBS',
 				description: 'Open source streaming and recording',
 				url: 'https://obsproject.com',
+				current: true,
 			},
 		],
 	},
@@ -460,6 +501,7 @@ const CATEGORIES: Category[] = [
 				name: 'Spotify',
 				description: 'Music streaming service',
 				url: 'https://spotify.com',
+				current: true,
 			},
 			{
 				name: 'Apple Music',
@@ -479,7 +521,37 @@ const CATEGORIES: Category[] = [
 			{
 				name: 'TBPN',
 				description: 'Tech news and product reviews',
-				url: 'https://youtube.com/@TBPN',
+				url: 'https://www.youtube.com/@TBPNLive',
+				current: true,
+			},
+			{
+				name: 'The Standup',
+				description: 'Daily tech and startup podcast',
+				url: 'https://open.spotify.com/show/01A062kejnXFkJE01bjN5J',
+				current: true,
+			},
+			{
+				name: 'Lex Fridman Podcast',
+				description: 'Conversations about science, tech, and philosophy',
+				url: 'https://open.spotify.com/show/2MAi0BvDc6GTFvKFPXnkCL',
+				current: true,
+			},
+			{
+				name: 'The Diary Of A CEO',
+				description: 'Steven Bartlett interviews world-class minds',
+				url: 'https://open.spotify.com/show/7iQXmUT7XGuZSzAMjoNWlX',
+				current: true,
+			},
+			{
+				name: 'Acquired',
+				description: 'Playbooks that built the greatest companies',
+				url: 'https://open.spotify.com/show/7Fj0XEuUQLUqoMZQdsLXqp',
+				current: true,
+			},
+			{
+				name: 'Soft Skills Engineering',
+				description: 'Advice for devs on non-technical stuff',
+				url: 'https://open.spotify.com/show/59I1XnvAB9fQzSj9SIKCoI',
 				current: true,
 			},
 		],
@@ -491,11 +563,13 @@ const CATEGORIES: Category[] = [
 				name: 'Eight Sleep',
 				description: 'Smart mattress cover with temperature control',
 				url: 'https://refer.eight.sl/dak74975',
+				current: true,
 			},
 			{
 				name: 'Tesla',
 				description: 'Electric vehicles and energy',
 				url: 'https://tesla.com',
+				current: true,
 			},
 		],
 	},
@@ -506,56 +580,67 @@ const CATEGORIES: Category[] = [
 				name: 'Dell UltraSharp U2725QE',
 				description: '27" 4K IPS monitor with USB-C hub',
 				url: 'https://amzn.to/4qIlLnM',
+				current: true,
 			},
 			{
 				name: 'KEF LSX II LT',
 				description: 'Wireless HiFi speakers',
 				url: 'https://amzn.to/4pwT1NM',
+				current: true,
 			},
 			{
 				name: 'Razer DeathAdder V2 X HyperSpeed',
 				description: 'Wireless ergonomic gaming mouse',
 				url: 'https://amzn.to/4smm1KK',
+				current: true,
 			},
 			{
 				name: 'Apple Magic Keyboard',
 				description: 'Touch ID and numeric keypad',
 				url: 'https://amzn.to/4qCzFaY',
+				current: true,
 			},
 			{
 				name: 'Corsair TBT200',
 				description: 'Thunderbolt 4 dock with 96W power delivery',
 				url: 'https://amzn.to/49cL6As',
+				current: true,
 			},
 			{
 				name: 'Apple HomePod mini',
 				description: 'Compact smart speaker with Siri',
 				url: 'https://amzn.to/49t8E2S',
+				current: true,
 			},
 			{
 				name: 'Google Nest Hub',
 				description: '7-inch smart display',
 				url: 'https://amzn.to/4b7FPvt',
+				current: true,
 			},
 			{
 				name: 'Nothing Headphone (1)',
 				description: 'KEF-tuned wireless ANC headphones',
 				url: 'https://amzn.to/4jvFLHJ',
+				current: true,
 			},
 			{
 				name: 'Nothing Ear (3)',
 				description: 'Wireless earbuds with 45dB hybrid ANC',
 				url: 'https://amzn.to/4pvk3VR',
+				current: true,
 			},
 			{
 				name: 'Soundcore AeroClip',
 				description: 'Open-ear clip-on earbuds',
 				url: 'https://amzn.to/3Z1pOjb',
+				current: true,
 			},
 			{
 				name: 'Logitech MX Master 4',
 				description: 'Ergonomic wireless mouse with haptic feedback',
 				url: 'https://amzn.to/4q9J0Hk',
+				current: true,
 			},
 		],
 	},
@@ -736,15 +821,6 @@ export function RecommendationsList() {
 											rel="noopener noreferrer"
 											target="_blank"
 										>
-											{item.current === true && (
-												<span className="absolute top-4 right-4 z-10 flex items-center gap-1.5 font-mono text-neutral-400 text-xs">
-													[ACTIVE]
-													<span className="relative flex h-2 w-2">
-														<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
-														<span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
-													</span>
-												</span>
-											)}
 											{logoUrl !== undefined && (
 												<Image
 													alt=""
@@ -757,14 +833,30 @@ export function RecommendationsList() {
 												/>
 											)}
 											<div className="relative z-10">
-												<TextScramble
-													as="h3"
-													className="font-bold font-mono text-lg text-neutral-900 uppercase tracking-tight"
-													duration={0.6}
-													speed={0.03}
-												>
-													{item.name}
-												</TextScramble>
+												<div className="flex items-center gap-2">
+													<TextScramble
+														as="h3"
+														className="font-bold font-mono text-lg text-neutral-900 uppercase tracking-tight"
+														duration={0.6}
+														speed={0.03}
+													>
+														{item.name}
+													</TextScramble>
+													{item.current === true ? (
+														<span className="flex items-center gap-1.5 font-mono text-neutral-400 text-xs">
+															[ACTIVE]
+															<span className="relative flex h-2 w-2">
+																<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
+																<span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
+															</span>
+														</span>
+													) : (
+														<span className="flex items-center gap-1.5 font-mono text-neutral-400 text-xs">
+															[INACTIVE]
+															<span className="h-2 w-2 rounded-full bg-neutral-300" />
+														</span>
+													)}
+												</div>
 												<p className="mt-2 font-mono text-neutral-600 text-sm">
 													{item.description}
 												</p>
