@@ -859,7 +859,7 @@ export function RecommendationsList() {
 													{item.description}
 												</p>
 											</div>
-											<div className="relative z-10 mt-4 font-mono text-neutral-400 text-xs underline">
+											<div className="relative z-10 mt-4 truncate font-mono text-neutral-400 text-xs underline">
 												{item.url
 													.replace(URL_PROTOCOL_REGEX, '')
 													.replace(URL_TRAILING_SLASH_REGEX, '')}
