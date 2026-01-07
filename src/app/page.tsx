@@ -35,7 +35,8 @@ export default function HomePage() {
 			<p className="mt-4 max-w-md text-center text-neutral-600">
 				Software Engineer with 15 years of professional experience and a 20+
 				year track record in software development, known for mastering complex
-				systems and leading scalable, reliable architecture.
+				systems, designing AI workflows and systems, and leading scalable,
+				reliable architecture.
 			</p>
 			<nav className="mt-8 flex items-center gap-6">
 				{socials.map((social) => (
