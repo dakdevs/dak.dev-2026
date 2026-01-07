@@ -189,15 +189,15 @@ const CATEGORIES: Category[] = [
 		name: 'Browsers',
 		items: [
 			{
-				name: 'Zen',
-				description: 'Privacy-focused Firefox fork',
-				url: 'https://zen-browser.app',
-				current: true,
-			},
-			{
 				name: 'Dia',
 				description: 'AI-native browser',
 				url: 'https://dia.dev',
+				current: true,
+			},
+			{
+				name: 'Zen',
+				description: 'Privacy-focused Firefox fork',
+				url: 'https://zen-browser.app',
 			},
 			{
 				name: 'Comet',
@@ -303,6 +303,23 @@ const CATEGORIES: Category[] = [
 				name: 'TanStack',
 				description: 'High-quality open-source libraries for web dev',
 				url: 'https://tanstack.com',
+				current: true,
+			},
+		],
+	},
+	{
+		name: 'Finance',
+		items: [
+			{
+				name: 'Mercury',
+				description: 'Banking for startups',
+				url: 'https://mercury.com/share/dakdevs',
+				current: true,
+			},
+			{
+				name: 'Robinhood',
+				description: 'Commission-free investing',
+				url: 'https://robinhood.com',
 				current: true,
 			},
 		],
@@ -475,32 +492,18 @@ const CATEGORIES: Category[] = [
 		],
 	},
 	{
-		name: 'Finance',
-		items: [
-			{
-				name: 'Mercury',
-				description: 'Banking for startups',
-				url: 'https://mercury.com/share/dakdevs',
-			},
-			{
-				name: 'Robinhood',
-				description: 'Commission-free investing',
-				url: 'https://robinhood.com',
-			},
-		],
-	},
-	{
 		name: 'Entertainment',
 		items: [
-			{
-				name: 'Apple TV+',
-				description: 'Streaming service',
-				url: 'https://apple.com/apple-tv-plus',
-			},
 			{
 				name: 'Spotify',
 				description: 'Music streaming service',
 				url: 'https://spotify.com',
+				current: true,
+			},
+			{
+				name: 'Apple TV+',
+				description: 'Streaming service',
+				url: 'https://apple.com/apple-tv-plus',
 				current: true,
 			},
 			{
@@ -821,20 +824,6 @@ export function RecommendationsList() {
 											rel="noopener noreferrer"
 											target="_blank"
 										>
-											{item.current === true ? (
-												<span className="absolute top-6 right-6 z-10 flex items-center gap-1.5 font-mono text-neutral-400 text-xs">
-													[ACTIVE]
-													<span className="relative flex h-2 w-2">
-														<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
-														<span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
-													</span>
-												</span>
-											) : (
-												<span className="absolute top-6 right-6 z-10 flex items-center gap-1.5 font-mono text-neutral-400 text-xs">
-													[INACTIVE]
-													<span className="h-2 w-2 rounded-full bg-neutral-300" />
-												</span>
-											)}
 											{logoUrl !== undefined && (
 												<Image
 													alt=""
@@ -847,14 +836,30 @@ export function RecommendationsList() {
 												/>
 											)}
 											<div className="relative z-10">
-												<TextScramble
-													as="h3"
-													className="font-bold font-mono text-lg text-neutral-900 uppercase tracking-tight"
-													duration={0.6}
-													speed={0.03}
-												>
-													{item.name}
-												</TextScramble>
+												<div className="flex items-start justify-between gap-2">
+													<TextScramble
+														as="h3"
+														className="flex-1 font-bold font-mono text-lg text-neutral-900 uppercase tracking-tight"
+														duration={0.6}
+														speed={0.03}
+													>
+														{item.name}
+													</TextScramble>
+													{item.current === true ? (
+														<span className="flex shrink-0 items-center gap-1.5 font-mono text-neutral-400 text-xs">
+															[ACTIVE]
+															<span className="relative flex h-2 w-2">
+																<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
+																<span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
+															</span>
+														</span>
+													) : (
+														<span className="flex shrink-0 items-center gap-1.5 font-mono text-neutral-400 text-xs">
+															[INACTIVE]
+															<span className="h-2 w-2 rounded-full bg-neutral-300" />
+														</span>
+													)}
+												</div>
 												<p className="mt-2 font-mono text-neutral-600 text-sm">
 													{item.description}
 												</p>
