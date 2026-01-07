@@ -685,16 +685,21 @@ export function RecommendationsList() {
 									const logoUrl = LOGO_MAP[item.name]
 									return (
 										<a
-											className={`relative flex flex-col justify-between overflow-hidden p-6 transition-colors duration-200 hover:bg-neutral-50 ${
-												item.current
-													? 'bg-white ring-2 ring-neutral-950 ring-inset'
-													: 'bg-white'
-											}`}
+											className="relative flex flex-col justify-between overflow-hidden bg-white p-6 transition-colors duration-200 hover:bg-neutral-50"
 											href={item.url}
 											key={item.name}
 											rel="noopener noreferrer"
 											target="_blank"
 										>
+											{item.current === true && (
+												<span className="absolute top-4 right-4 z-10 flex items-center gap-1.5 font-mono text-neutral-400 text-xs">
+													[ACTIVE]
+													<span className="relative flex h-2 w-2">
+														<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
+														<span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
+													</span>
+												</span>
+											)}
 											{logoUrl !== undefined && (
 												<Image
 													alt=""
@@ -707,21 +712,14 @@ export function RecommendationsList() {
 												/>
 											)}
 											<div className="relative z-10">
-												<div className="flex items-center gap-2">
-													<TextScramble
-														as="h3"
-														className="font-bold font-mono text-lg text-neutral-900 uppercase tracking-tight"
-														duration={0.6}
-														speed={0.03}
-													>
-														{item.name}
-													</TextScramble>
-													{item.current === true && (
-														<span className="font-mono text-neutral-400 text-xs">
-															[ACTIVE]
-														</span>
-													)}
-												</div>
+												<TextScramble
+													as="h3"
+													className="font-bold font-mono text-lg text-neutral-900 uppercase tracking-tight"
+													duration={0.6}
+													speed={0.03}
+												>
+													{item.name}
+												</TextScramble>
 												<p className="mt-2 font-mono text-neutral-600 text-sm">
 													{item.description}
 												</p>
