@@ -2,10 +2,58 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 
+import Image from 'next/image'
+
 import { TextScramble } from '~/components/motion-primitives/text-scramble'
 
 const URL_PROTOCOL_REGEX = /^https?:\/\//
 const URL_TRAILING_SLASH_REGEX = /\/$/
+
+const LOGO_MAP: Record<string, string> = {
+	'1Password': 'https://svgl.app/library/1password-dark.svg',
+	'Apple Music': 'https://svgl.app/library/apple.svg',
+	'Apple TV+': 'https://svgl.app/library/apple.svg',
+	AWS: 'https://svgl.app/library/aws_dark.svg',
+	ChatGPT: 'https://svgl.app/library/openai.svg',
+	Claude: 'https://svgl.app/library/anthropic_black.svg',
+	Cloudflare: 'https://svgl.app/library/cloudflare.svg',
+	Cursor: 'https://svgl.app/library/cursor_dark.svg',
+	Discord: 'https://svgl.app/library/discord.svg',
+	'Drizzle ORM': 'https://svgl.app/library/drizzle-orm_dark.svg',
+	Effect: 'https://svgl.app/library/effect_light.svg',
+	GoLand: 'https://svgl.app/library/goland.svg',
+	'Google AI': 'https://svgl.app/library/gemini.svg',
+	'IntelliJ IDEA Ultimate': 'https://svgl.app/library/intellijidea.svg',
+	Jotai: 'https://svgl.app/library/jotai.svg',
+	Linear: 'https://svgl.app/library/linear.svg',
+	MySQL: 'https://svgl.app/library/mysql-icon-dark.svg',
+	'Next.js': 'https://svgl.app/library/nextjs_icon_dark.svg',
+	Notion: 'https://svgl.app/library/notion.svg',
+	OBS: 'https://svgl.app/library/obs.svg',
+	'Oh My OpenCode': 'https://svgl.app/library/github_light.svg',
+	OpenCode: 'https://svgl.app/library/github_light.svg',
+	PlanetScale: 'https://svgl.app/library/planetscale.svg',
+	Playwright: 'https://svgl.app/library/playwright.svg',
+	PostgreSQL: 'https://svgl.app/library/postgresql.svg',
+	Raycast: 'https://svgl.app/library/raycast.svg',
+	React: 'https://svgl.app/library/react_dark.svg',
+	RustRover: 'https://svgl.app/library/rustrover.svg',
+	Slack: 'https://svgl.app/library/slack.svg',
+	Spotify: 'https://svgl.app/library/spotify.svg',
+	Suno: 'https://svgl.app/library/suno.svg',
+	Tailscale: 'https://svgl.app/library/tailscale.svg',
+	'Tailwind CSS': 'https://svgl.app/library/tailwindcss.svg',
+	Tesla: 'https://svgl.app/library/tesla.svg',
+	TypeScript: 'https://svgl.app/library/typescript.svg',
+	Vercel: 'https://svgl.app/library/vercel.svg',
+	Vite: 'https://svgl.app/library/vitejs.svg',
+	Vitest: 'https://svgl.app/library/vitest.svg',
+	WebStorm: 'https://svgl.app/library/webstorm.svg',
+	X: 'https://svgl.app/library/x.svg',
+	Zed: 'https://svgl.app/library/zed-logo_dark.svg',
+	Zen: 'https://svgl.app/library/zen-browser.svg',
+	Zod: 'https://svgl.app/library/zod.svg',
+}
 
 const CATEGORIES = [
 	{
@@ -509,34 +557,48 @@ export function RecommendationsList() {
 								</span>
 							</div>
 							<div className="grid gap-px bg-neutral-200 sm:grid-cols-2 lg:grid-cols-3">
-								{category.items.map((item) => (
-									<a
-										className="flex flex-col justify-between bg-white p-6 transition-colors duration-200 hover:bg-neutral-50"
-										href={item.url}
-										key={item.name}
-										rel="noopener noreferrer"
-										target="_blank"
-									>
-										<div>
-											<TextScramble
-												as="h3"
-												className="font-bold font-mono text-lg text-neutral-900 uppercase tracking-tight"
-												duration={0.6}
-												speed={0.03}
-											>
-												{item.name}
-											</TextScramble>
-											<p className="mt-2 font-mono text-neutral-600 text-sm">
-												{item.description}
-											</p>
-										</div>
-										<div className="mt-4 font-mono text-neutral-400 text-xs underline">
-											{item.url
-												.replace(URL_PROTOCOL_REGEX, '')
-												.replace(URL_TRAILING_SLASH_REGEX, '')}
-										</div>
-									</a>
-								))}
+								{category.items.map((item) => {
+									const logoUrl = LOGO_MAP[item.name]
+									return (
+										<a
+											className="relative flex flex-col justify-between overflow-hidden bg-white p-6 transition-colors duration-200 hover:bg-neutral-50"
+											href={item.url}
+											key={item.name}
+											rel="noopener noreferrer"
+											target="_blank"
+										>
+											{logoUrl !== undefined && (
+												<Image
+													alt=""
+													aria-hidden="true"
+													className="pointer-events-none absolute right-0 bottom-0 translate-x-4 translate-y-4 opacity-[0.08] grayscale"
+													height={96}
+													src={logoUrl}
+													unoptimized
+													width={96}
+												/>
+											)}
+											<div className="relative z-10">
+												<TextScramble
+													as="h3"
+													className="font-bold font-mono text-lg text-neutral-900 uppercase tracking-tight"
+													duration={0.6}
+													speed={0.03}
+												>
+													{item.name}
+												</TextScramble>
+												<p className="mt-2 font-mono text-neutral-600 text-sm">
+													{item.description}
+												</p>
+											</div>
+											<div className="relative z-10 mt-4 font-mono text-neutral-400 text-xs underline">
+												{item.url
+													.replace(URL_PROTOCOL_REGEX, '')
+													.replace(URL_TRAILING_SLASH_REGEX, '')}
+											</div>
+										</a>
+									)
+								})}
 							</div>
 						</section>
 					))
