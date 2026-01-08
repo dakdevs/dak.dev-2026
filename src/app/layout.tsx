@@ -9,6 +9,7 @@ import { Analytics } from '@vercel/analytics/next'
 import { Header } from '~/components/header'
 import { mono } from '~/fonts'
 import { cn } from '~/utils/cn'
+import Script from 'next/script'
 
 export const viewport: Viewport = {
 	maximumScale: 1,
@@ -75,6 +76,10 @@ export default function RootLayout({
 			className={cn(mono.variable, 'flex h-full flex-col antialiased')}
 			lang="en-US"
 		>
+			<Script
+				src="https://cdn.visitors.now/v.js"
+				data-token="efe0dd03-4426-434f-bc98-fda13d30a0b5"
+			/>
 			<body className="flex min-h-screen flex-col">
 				<Header />
 				{children}
