@@ -2,9 +2,14 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 
+import { motion } from 'motion/react'
 import Image from 'next/image'
 
 import { TextScramble } from '~/components/motion-primitives/text-scramble'
+import { ScreenshotTooltip } from '~/components/screenshot-tooltip'
+import { SCREENSHOT_MAP } from '~/data/screenshot-manifest'
+
+const TRANSITION_EASE = [0.16, 1, 0.3, 1] as const
 
 const URL_PROTOCOL_REGEX = /^https?:\/\//
 const URL_TRAILING_SLASH_REGEX = /\/$/
@@ -139,7 +144,7 @@ const CATEGORIES: Category[] = [
 			{
 				name: 'OpenCode',
 				description: 'Terminal-based AI coding assistant',
-				url: 'https://github.com/opencode-ai/opencode',
+				url: 'https://opencode.ai',
 				current: true,
 			},
 			{
@@ -669,6 +674,8 @@ function fuzzyMatch(text: string, query: string): boolean {
 export function RecommendationsList() {
 	const [search, setSearch] = useState('')
 	const [showCurrentOnly, setShowCurrentOnly] = useState(false)
+	const [hoveredUrl, setHoveredUrl] = useState<string | null>(null)
+	const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
 	const searchInputRef = useRef<HTMLInputElement>(null)
 
 	useEffect(() => {
@@ -716,24 +723,44 @@ export function RecommendationsList() {
 
 	return (
 		<div className="mx-auto max-w-5xl">
-			<div className="mb-16 grid grid-cols-2 gap-px bg-neutral-200 md:grid-cols-4">
-				<div className="bg-white p-6">
+			<motion.div
+				animate={{ opacity: 1, y: 0 }}
+				className="mb-16 grid grid-cols-2 gap-px bg-neutral-200 md:grid-cols-4"
+				initial={{ opacity: 0, y: 20 }}
+				transition={{ duration: 0.8, delay: 0.1, ease: TRANSITION_EASE }}
+			>
+				<motion.div
+					animate={{ opacity: 1, y: 0 }}
+					className="bg-white p-6"
+					initial={{ opacity: 0, y: 20 }}
+					transition={{ duration: 0.8, delay: 0.2, ease: TRANSITION_EASE }}
+				>
 					<div className="mb-2 font-mono text-neutral-400 text-xs tracking-widest">
 						[TOTAL_ENTRIES]
 					</div>
 					<div className="font-black font-mono text-4xl text-neutral-950 md:text-5xl">
 						{totalItems}
 					</div>
-				</div>
-				<div className="bg-white p-6">
+				</motion.div>
+				<motion.div
+					animate={{ opacity: 1, y: 0 }}
+					className="bg-white p-6"
+					initial={{ opacity: 0, y: 20 }}
+					transition={{ duration: 0.8, delay: 0.3, ease: TRANSITION_EASE }}
+				>
 					<div className="mb-2 font-mono text-neutral-400 text-xs tracking-widest">
 						[ACTIVE]
 					</div>
 					<div className="font-black font-mono text-4xl text-neutral-950 md:text-5xl">
 						{currentItems}
 					</div>
-				</div>
-				<div className="col-span-2 bg-white p-6 md:col-span-1">
+				</motion.div>
+				<motion.div
+					animate={{ opacity: 1, y: 0 }}
+					className="col-span-2 bg-white p-6 md:col-span-1"
+					initial={{ opacity: 0, y: 20 }}
+					transition={{ duration: 0.8, delay: 0.4, ease: TRANSITION_EASE }}
+				>
 					<div className="mb-2 font-mono text-neutral-400 text-xs tracking-widest">
 						[FILTER]
 					</div>
@@ -762,8 +789,13 @@ export function RecommendationsList() {
 							[ACTIVE]
 						</button>
 					</div>
-				</div>
-				<div className="col-span-2 bg-white p-6 md:col-span-1">
+				</motion.div>
+				<motion.div
+					animate={{ opacity: 1, y: 0 }}
+					className="col-span-2 bg-white p-6 md:col-span-1"
+					initial={{ opacity: 0, y: 20 }}
+					transition={{ duration: 0.8, delay: 0.5, ease: TRANSITION_EASE }}
+				>
 					<div className="mb-2 font-mono text-neutral-400 text-xs tracking-widest">
 						[SEARCH_QUERY]
 					</div>
@@ -775,10 +807,15 @@ export function RecommendationsList() {
 						type="text"
 						value={search}
 					/>
-				</div>
-			</div>
+				</motion.div>
+			</motion.div>
 
-			<nav className="mb-16 border-neutral-200 border-b pb-8">
+			<motion.nav
+				animate={{ opacity: 1, y: 0 }}
+				className="mb-16 border-neutral-200 border-b pb-8"
+				initial={{ opacity: 0, y: 20 }}
+				transition={{ duration: 0.8, delay: 0.6, ease: TRANSITION_EASE }}
+			>
 				<div className="mb-4 font-mono text-neutral-400 text-xs tracking-widest">
 					[JUMP_TO]
 				</div>
@@ -793,9 +830,14 @@ export function RecommendationsList() {
 						</a>
 					))}
 				</div>
-			</nav>
+			</motion.nav>
 
-			<div className="space-y-16">
+			<motion.div
+				animate={{ opacity: 1, y: 0 }}
+				className="space-y-16"
+				initial={{ opacity: 0, y: 20 }}
+				transition={{ duration: 0.8, delay: 0.7, ease: TRANSITION_EASE }}
+			>
 				{filteredCategories.length === 0 ? (
 					<p className="font-mono text-neutral-500">[NO_RESULTS_FOUND]</p>
 				) : (
@@ -821,6 +863,11 @@ export function RecommendationsList() {
 											className="relative flex flex-col justify-between overflow-hidden bg-white p-6 transition-colors duration-200 hover:bg-neutral-50"
 											href={item.url}
 											key={item.name}
+											onMouseEnter={() => setHoveredUrl(item.url)}
+											onMouseLeave={() => setHoveredUrl(null)}
+											onMouseMove={(e) =>
+												setMousePos({ x: e.clientX, y: e.clientY })
+											}
 											rel="noopener noreferrer"
 											target="_blank"
 										>
@@ -876,7 +923,13 @@ export function RecommendationsList() {
 						</section>
 					))
 				)}
-			</div>
+			</motion.div>
+			{hoveredUrl !== null && (
+				<ScreenshotTooltip
+					position={mousePos}
+					src={SCREENSHOT_MAP[hoveredUrl]}
+				/>
+			)}
 		</div>
 	)
 }
